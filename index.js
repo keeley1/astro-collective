@@ -1,9 +1,39 @@
 // import required modules
 const express = require('express');
 const ejs = require('ejs');
+const mysql = require('mysql');
+const bodyParser = require('body-parser');
+const session = require('express-session')
 
 const app = express();
 const port = 8000;
+
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(session({
+    secret: 'somerandomstuff',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        expires: 600000
+    }
+}));
+
+const db = mysql.createConnection ({
+    host: 'localhost',
+    user: 'astroappuser',
+    password: 'milkyway',
+    database: 'astroCollective'
+});
+
+// connect to the database
+db.connect((err) => {
+    if (err) {
+        throw err;
+    }
+    console.log('connected to database');
+});
+global.db = db; 
 
 // setting up css
 app.use(express.static(__dirname + '/public'));
