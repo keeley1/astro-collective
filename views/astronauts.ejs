@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>astronauts</title>
+    <link rel="stylesheet"  type="text/css" href="main.css" />
+</head>
+<body>
+    <h1><a href="/" id="app-title"><%=appName%></a></h1>
+    <p><a href="register" id="sign-up">sign up</a></p>
+
+    <h2>astronauts</h2>
+    <p>list here</p>
+
+    <p><a href="addastronaut">add astronaut</a></p>
+
+    <% if (allAstronauts.length > 0) { %>
+        <ul>
+            <div class="astronaut-container">
+                <% allAstronauts.forEach(function(astronaut) { %>
+                    <div class="astronaut">
+                        <a href="login">
+                            <li class="astro-list">
+                                <h3 class="astronaut-title"><%= astronaut.astronaut_name %></h3>
+                                <p class="astronaut-data">Date of Birth: <%= astronaut.date_of_birth %></p>
+                                <p class="astronaut-data">Date of Death: <%= astronaut.date_of_death %></p>
+                                <p class="astronaut-data">Country: <%= astronaut.country %></p>
+                                <p class="astronaut-data">Hours in Space: <%= astronaut.hours_in_space %></p>
+                                <p class="astronaut-data">Astronaut Profile: <%= astronaut.astronaut_profile %></p>
+                            </li>
+                        </a>
+                    </div>
+                  <% }); %>
+            </div>
+        </ul>
+      <% } else { %>
+        <p>No astronauts available.</p>
+      <% } %>
+</body>
+</html>

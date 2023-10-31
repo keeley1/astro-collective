@@ -26,3 +26,14 @@ CREATE TABLE user_details (
   hashedPassword VARCHAR(60) NOT NULL,
   PRIMARY KEY(user_id)
 );
+
+CREATE TABLE astronauts (
+  astronaut_id INT NOT NULL UNIQUE AUTO_INCREMENT,
+  astronaut_name VARCHAR(60) NOT NULL,
+  date_of_birth DATE,
+  date_of_death DATE,
+  country VARCHAR(20),
+  hours_in_space DECIMAL(6, 1),
+  astronaut_profile VARCHAR(500),
+  PRIMARY KEY(astronaut_id)
+);

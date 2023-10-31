@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>add astronaut</title>
+    <link rel="stylesheet"  type="text/css" href="main.css" />
+</head>
+<body>
+    <h1><a href="/" id="app-title"><%=appName%></a></h1>
+    <p><a href="register" id="sign-up">sign up</a></p>
+
+    <div class="centered-form-content">
+        <h2>add astronaut</h2>
+        <form method="POST" action="/registered" class="form-details">
+            <label for="first">First name:</label><br>
+            <input id="first" type="text" name="first" placeholder="first name" class="form-data"/><br>
+
+            <label for="last">Last name:</label><br>
+            <input id="last" type="text" name="last" placeholder="last name" class="form-data"/><br>
+
+            <label for="email">Email:</label><br>
+            <input id="email" type="email" name="email" placeholder="email" class="form-data"/><br>
+
+            <label for="username">Username:</label><br>
+            <input id="username" type="text" name="username" placeholder="username" class="form-data"/><br>
+
+            <label for="password">Password:</label><br>
+            <input id="password" type="text" name="password" placeholder="password" class="form-data"/><br>
+            <input type="submit" value="sign up" class="form-button"/>
+        </form>
+
+    </div>
+</body>
+</html>

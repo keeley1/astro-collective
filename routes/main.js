@@ -1,8 +1,11 @@
+const { check } = require('express-validator');
+
 module.exports = function(app, appData) {
 
     // importing necessary dependencies
     const mysql = require('mysql');
     const bcrypt = require('bcrypt'); 
+    const formatDate = require('../script');
 
     const redirectLogin = (req, res, next) => {
         if (!req.session.userId) {
@@ -75,5 +78,29 @@ module.exports = function(app, appData) {
                 }
             }
         });
+    });
+    app.get('/astronauts', function(req, res) {
+        //select all data from astronauts
+        let sqlquery = "SELECT * FROM astronauts";
+
+        db.query(sqlquery, (err, result) => {
+            if (err) {
+                res.redirect('./');
+            }
+            
+            const astronautsWithFormattedDates = result.map(astronaut => {
+                return {
+                    ...astronaut,
+                    date_of_birth: formatDate(astronaut.date_of_birth),
+                    date_of_death: formatDate(astronaut.date_of_death),
+                };
+            });
+            let astronautData = Object.assign({}, appData, { allAstronauts: astronautsWithFormattedDates });
+            console.log(astronautData);
+            res.render('astronauts.ejs', astronautData);
+        });
+    });
+    app.get('/addastronaut', redirectLogin, function(req, res) {
+        res.render('add-astronaut.ejs', appData);
     });
 }

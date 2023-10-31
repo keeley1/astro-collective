@@ -41,7 +41,10 @@ html {
 
 .form-data {
     width: 100%; 
-    margin-bottom: 10px; 
+    margin-bottom: 10px;
+    margin-top: 10px;
+    padding: 10px;
+    box-sizing: border-box;
 }
 
 .form-button {
@@ -51,9 +54,43 @@ html {
     padding: 10px;
     background-color: rgb(218, 218, 218);
     cursor: pointer;
+    width: 100%;
+    box-sizing: border-box;
+    margin-top: 10px;
 }
 
 /*
 .form-button:hover {
     background-color: rgb(218, 218, 218);
 }*/
+
+.below-form-button {
+    color: rgb(19, 19, 205);
+    text-decoration: none;
+}
+
+.below-form-button:hover {
+    text-decoration: underline;
+}
+
+/*astronaut pages*/
+.astro-list {
+    list-style: none;
+}
+
+.astronaut-container {
+    display: flex;
+    flex-wrap: wrap; 
+}
+
+.astronaut-container a {
+    text-decoration: none; 
+    color: inherit; 
+}
+
+.astronaut {
+    flex: 0 0 40%;
+    margin: 1%;
+    padding: 10px;
+    background-color: rgb(238, 238, 238);
+}
