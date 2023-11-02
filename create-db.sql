@@ -16,7 +16,6 @@ CREATE USER 'astroappuser'@'localhost' IDENTIFIED WITH mysql_native_password BY 
 GRANT ALL PRIVILEGES ON astroCollective.* TO 'astroappuser'@'localhost';      
 
 DROP TABLE IF EXISTS user_details;
-
 CREATE TABLE user_details (
   user_id INT NOT NULL UNIQUE AUTO_INCREMENT,
   firstname VARCHAR(20) NOT NULL,
@@ -27,9 +26,11 @@ CREATE TABLE user_details (
   PRIMARY KEY(user_id)
 );
 
+DROP TABLE IF EXISTS astronauts;
 CREATE TABLE astronauts (
   astronaut_id INT NOT NULL UNIQUE AUTO_INCREMENT,
   astronaut_name VARCHAR(60) NOT NULL,
+  astronaut_photo VARCHAR(500),
   date_of_birth DATE,
   date_of_death DATE,
   country VARCHAR(20),

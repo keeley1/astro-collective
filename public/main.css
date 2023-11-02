@@ -94,3 +94,9 @@ html {
     padding: 10px;
     background-color: rgb(238, 238, 238);
 }
+
+/*add astronaut page*/
+#astro-profile {
+    height: 200px;
+    white-space: pre-wrap;
+}

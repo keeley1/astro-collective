@@ -12,23 +12,30 @@
     <p><a href="register" id="sign-up">sign up</a></p>
 
     <div class="centered-form-content">
-        <h2>add astronaut</h2>
+        <h2>Add astronaut</h2>
         <form method="POST" action="/registered" class="form-details">
-            <label for="first">First name:</label><br>
-            <input id="first" type="text" name="first" placeholder="first name" class="form-data"/><br>
+            <label for="astro-name">Astronaut name:</label><br>
+            <input id="astro-name" type="text" name="astro-name" placeholder="Astronaut name" class="form-data"/><br>
 
-            <label for="last">Last name:</label><br>
-            <input id="last" type="text" name="last" placeholder="last name" class="form-data"/><br>
+            <label for="astro-photo">Astronaut photo:</label><br>
+            <input id="astro-photo" type="text" name="astro-photo" placeholder="URL of astronaut photo" class="form-data"/><br>
 
-            <label for="email">Email:</label><br>
-            <input id="email" type="email" name="email" placeholder="email" class="form-data"/><br>
+            <label for="astro-dob">Date of birth:</label><br>
+            <input id="astro-dob" type="date" name="astro-dob" class="form-data"/><br>
 
-            <label for="username">Username:</label><br>
-            <input id="username" type="text" name="username" placeholder="username" class="form-data"/><br>
+            <label for="astro-dod">Date of death (if applicable):</label><br>
+            <input id="astro-dod" type="date" name="astro-dod" class="form-data"/><br>
 
-            <label for="password">Password:</label><br>
-            <input id="password" type="text" name="password" placeholder="password" class="form-data"/><br>
-            <input type="submit" value="sign up" class="form-button"/>
+            <label for="astro-country">Country:</label><br>
+            <input id="astro-country" type="text" name="astro-country" placeholder="Astronaut country" class="form-data"/><br>
+
+            <label for="astro-spacetime">Time in space (in hours):</label><br>
+            <input id="astro-spacetime" type="number" name="astro-spacetime" placeholder="Hours in space" class="form-data"/><br>
+
+            <label for="astro-profile">Astronaut summary:</label><br>
+            <textarea id="astro-profile" name="astro-profile" cols="30" rows="10" placeholder="Astronaut achievements, missions, etc" class="form-data"></textarea><br>
+            
+            <input type="submit" value="submit" class="form-button"/>
         </form>
 
     </div>
