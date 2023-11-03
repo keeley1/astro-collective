@@ -21,15 +21,12 @@
             <div class="astronaut-container">
                 <% allAstronauts.forEach(function(astronaut) { %>
                     <div class="astronaut">
-                        <a href="login">
+                        <a href="astronaut/<%= astronaut.astronaut_id %>">
                             <li class="astro-list">
                                 <h3 class="astronaut-title"><%= astronaut.astronaut_name %></h3>
                                 <img src="<%= astronaut.astronaut_photo %>" alt="<%= astronaut.astronaut_name %>" width="200" height="270">
-                                <p class="astronaut-data">Date of Birth: <%= astronaut.date_of_birth %></p>
-                                <p class="astronaut-data">Date of Death: <%= astronaut.date_of_death %></p>
                                 <p class="astronaut-data">Country: <%= astronaut.country %></p>
                                 <p class="astronaut-data">Hours in Space: <%= astronaut.hours_in_space %></p>
-                                <p class="astronaut-data">Astronaut Profile: <%= astronaut.astronaut_profile %></p>
                             </li>
                         </a>
                     </div>

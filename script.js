@@ -8,3 +8,5 @@ module.exports = function formatDate(dateString) {
     }
     return 'N/A';
 };
+
+// space time formatting
