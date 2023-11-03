@@ -1,5 +1,6 @@
 // import required modules
 const express = require('express');
+const path = require('path');
 const ejs = require('ejs');
 const mysql = require('mysql');
 const bodyParser = require('body-parser');
@@ -37,6 +38,7 @@ global.db = db;
 
 // setting up css
 app.use(express.static(__dirname + '/public'));
+//app.use(express.static(path.join(__dirname, '/public')));
 
 app.set('views', __dirname + '/views');
 

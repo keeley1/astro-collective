@@ -5,30 +5,33 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>astronaut</title>
-    <link rel="stylesheet"  type="text/css" href="main.css" />
+    <link rel="stylesheet"  type="text/css" href="/main.css" />
 </head>
 <body>
     <h1><a href="/" id="app-title"><%=appName%></a></h1>
     <p><a href="register" id="sign-up">sign up</a></p>
 
-    <h2>Astronauts</h2>
-    <p>list here</p>
-
-    <p><a href="addastronaut">Add astronaut</a></p>
+    <h2><a href="/astronauts" class="single-astro-back">back</a></h2>
 
     <% if (astronaut.length > 0) { %>
         <ul>
-            <div class="astronaut-container">
+            <div class="single-astronaut-container">
                 <% astronaut.forEach(function(astronaut) { %>
-                    <div class="astronaut">
-                        <li class="astro-list">
-                            <h3 class="astronaut-title"><%= astronaut.astronaut_name %></h3>
-                            <img src="<%= astronaut.astronaut_photo %>" alt="<%= astronaut.astronaut_name %>" width="200" height="270">
-                            <p class="astronaut-data">Date of Birth: <%= astronaut.date_of_birth %></p>
-                            <p class="astronaut-data">Date of Death: <%= astronaut.date_of_death %></p>
-                            <p class="astronaut-data">Country: <%= astronaut.country %></p>
-                            <p class="astronaut-data">Hours in Space: <%= astronaut.hours_in_space %></p>
-                            <p class="astronaut-data">Astronaut Profile: <%= astronaut.astronaut_profile %></p>
+                    <div class="single-astronaut">
+                        <li class="single-astro-list">
+                            <h3 class="single-astronaut-title"><%= astronaut.astronaut_name %></h3>
+                            <div class="single-astro-flex-container">
+                                <div class="single-astro-flex-one">
+                                    <img src="<%= astronaut.astronaut_photo %>" alt="<%= astronaut.astronaut_name %>" class="single-astro-photo" width="200" height="270">
+                                </div>
+                                <div class="single-astro-flex-two">
+                                    <p class="single-astronaut-data">Date of Birth: <%= astronaut.date_of_birth %></p>
+                                    <p class="single-astronaut-data">Date of Death: <%= astronaut.date_of_death %></p>
+                                    <p class="single-astronaut-data">Country: <%= astronaut.country %></p>
+                                    <p class="single-astronaut-data">Hours in Space: <%= astronaut.hours_in_space %></p>
+                                </div>
+                            </div>
+                            <p class="single-astronaut-data">Astronaut Profile: <%= astronaut.astronaut_profile %></p>
                         </li>
                     </div>
                   <% }); %>

@@ -73,7 +73,7 @@ html {
     text-decoration: underline;
 }
 
-/*astronaut pages*/
+/* astronaut pages */
 .astro-list {
     list-style: none;
 }
@@ -95,8 +95,27 @@ html {
     background-color: rgb(238, 238, 238);
 }
 
-/*add astronaut page*/
+/* add astronaut page */
 #astro-profile {
     height: 200px;
     white-space: pre-wrap;
+}
+
+/* single astronaut page */
+.single-astro-back {
+    text-decoration: none;
+    color: inherit;
+}
+
+.single-astro-list {
+    list-style: none;
+}
+
+.single-astro-flex-container {
+    display: flex;
+    flex-direction: row;
+}
+
+.single-astro-flex-two {
+    margin-left: 10px;
 }
