@@ -1,5 +1,5 @@
 /* importing fonts */ 
-@import url('https://fonts.googleapis.com/css2?family=Sometype+Mono:wght@500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans&family=Sometype+Mono:wght@400;500&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
 
 html {
@@ -8,6 +8,7 @@ html {
 
 #app-title {
     font-family: 'Sometype Mono', monospace, sans-serif;
+    font-weight: 500px;
     margin: 20px;
     text-decoration: none;
     color: black;
@@ -78,9 +79,14 @@ html {
     list-style: none;
 }
 
+.astro-list:hover {
+    color: rgb(102, 102, 102);
+}
+
 .astronaut-container {
     display: flex;
     flex-wrap: wrap; 
+    justify-content: center;
 }
 
 .astronaut-container a {
@@ -89,10 +95,43 @@ html {
 }
 
 .astronaut {
-    flex: 0 0 40%;
+    flex: 0 0 25%;
     margin: 1%;
     padding: 10px;
     background-color: rgb(238, 238, 238);
+    text-align: center;
+}
+
+.astronaut-title {
+    font-weight: 800;
+}
+
+.astronaut-photo {
+    width:  200px;
+    height: 250px;
+    object-fit: cover;
+}
+
+.astronaut-text-style {
+    font-family: 'Sometype Mono', monospace, sans-serif;
+    font-weight: 200;
+}
+
+.add-astro-position {
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+.add-astro {
+    text-decoration: none;
+    color: inherit;
+    margin-right: 20px;
+    padding: 10px;
+    border-radius: 3px;
+}
+
+.add-astro:hover {
+    background-color: rgb(218, 218, 218);
 }
 
 /* add astronaut page */
@@ -102,9 +141,21 @@ html {
 }
 
 /* single astronaut page */
+.single-astronaut-container {
+    padding: 20px;
+}
+
 .single-astro-back {
     text-decoration: none;
     color: inherit;
+    margin-left: 20px;
+    padding-right: 10px;
+    padding-left: 10px;
+}
+
+.single-astro-back:hover {
+    background-color: rgb(218, 218, 218);
+    border-radius: 50%;
 }
 
 .single-astro-list {
@@ -117,5 +168,9 @@ html {
 }
 
 .single-astro-flex-two {
-    margin-left: 10px;
+    margin-left: 20px;
+}
+
+.single-astronaut-title {
+    font-size: 30px;
 }
