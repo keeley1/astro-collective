@@ -11,38 +11,33 @@
     <h1><a href="/" id="app-title"><%=appName%></a></h1>
     <p><a href="register" id="sign-up">sign up</a></p>
 
-    <h2><a href="/astronauts" class="single-astro-back">&#60;</a></h2>
-
     <% if (astronaut.length > 0) { %>
-        <ul>
-            <div class="single-astronaut-container">
-                <% astronaut.forEach(function(astronaut) { %>
-                    <div class="single-astronaut">
-                        <li class="single-astro-list">
-                            <div class="single-astro-flex-container">
-                                <div class="single-astro-flex-one">
-                                    <img src="<%= astronaut.astronaut_photo %>" alt="<%= astronaut.astronaut_name %>" class="single-astro-photo" width="300">
-                                </div>
-                                <div class="single-astro-flex-two">
-                                    <h3 class="single-astronaut-title"><%= astronaut.astronaut_name %></h3>
+        <div class="single-astronaut-container">
+            <% astronaut.forEach(function(astronaut) { %>
+                <div class="single-astronaut">
+                    <p><a href="/astronauts" class="single-astro-back"><</a></p>
+                    <div class="single-astro-flex-container">
+                        <div class="single-astro-flex-one">
+                            <img src="<%= astronaut.astronaut_photo %>" alt="<%= astronaut.astronaut_name %>" class="single-astro-photo" width="300">
+                        </div>
+                        <div class="single-astro-flex-two">
+                            <h3 class="single-astronaut-title"><%= astronaut.astronaut_name %></h3>
 
-                                    <% if (astronaut.date_of_death === 'N/A' || astronaut.date_of_death === null) { %>
-                                        <p class="single-astronaut-data"><%= astronaut.date_of_birth %></p>
-                                    <% } else { %>
-                                        <p class="single-astronaut-data"><%= astronaut.date_of_birth %> - <%= astronaut.date_of_death %></p>
-                                    <% } %>
+                                <% if (astronaut.date_of_death === 'N/A' || astronaut.date_of_death === null) { %>
+                                     <p class="single-astronaut-data"><%= astronaut.date_of_birth %></p>
+                                <% } else { %>
+                                     <p class="single-astronaut-data"><%= astronaut.date_of_birth %> - <%= astronaut.date_of_death %></p>
+                                <% } %>
 
-                                    <p class="single-astronaut-data">Country: <%= astronaut.country %></p>
-                                    <p class="single-astronaut-data">Hours in Space: <%= astronaut.hours_in_space %></p>
-                                </div>
-                            </div>
-                            <p class="single-astronaut-data" id="single-astronaut-profile">Astronaut Profile: <%- astronaut.astronaut_profile.replace(/\r\n/g, '<br>') %></p>
-                        </li>
+                                <p class="single-astronaut-data">Country: <%= astronaut.country %></p>
+                                <p class="single-astronaut-data">Hours in Space: <%= astronaut.hours_in_space %></p>
+                        </div>
                     </div>
-                  <% }); %>
-            </div>
-        </ul>
-      <% } else { %>
+                    <p class="single-astronaut-data" id="single-astronaut-profile">Astronaut Profile: <%- astronaut.astronaut_profile.replace(/\r\n/g, '<br>') %></p>    
+                </div>
+             <% }); %>
+        </div>
+    <% } else { %>
         <p>No astronauts available.</p>
     <% } %>
 

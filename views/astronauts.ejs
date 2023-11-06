@@ -16,27 +16,23 @@
     </div>
 
     <% if (allAstronauts.length > 0) { %>
-        <ul>
-            <div class="astronaut-container">
-                <% allAstronauts.forEach(function(astronaut) { %>
-                    <div class="astronaut">
-                        <a href="astronaut/<%= astronaut.astronaut_id %>">
-                            <li class="astro-list">
-                                <h3 class="astronaut-title"><%= astronaut.astronaut_name %></h3>
-                                <img src="<%= astronaut.astronaut_photo %>" alt="<%= astronaut.astronaut_name %>" class="astronaut-photo">
-                                <div class="astronaut-text-style">
-                                    <p class="astronaut-data"><%= astronaut.country %></p>
-                                    <p class="astronaut-data"><%= astronaut.hours_in_space %> hours in space</p>
-                                </div>
-                            </li>
-                        </a>
-                    </div>
-                  <% }); %>
-            </div>
-        </ul>
-      <% } else { %>
+        <div class="astronaut-container">
+            <% allAstronauts.forEach(function(astronaut) { %>
+                <div class="astronaut">
+                    <a href="astronaut/<%= astronaut.astronaut_id %>">
+                        <h3 class="astronaut-title"><%= astronaut.astronaut_name %></h3>
+                        <img src="<%= astronaut.astronaut_photo %>" alt="<%= astronaut.astronaut_name %>" class="astronaut-photo">
+                        <div class="astronaut-text-style">
+                            <p class="astronaut-data"><%= astronaut.country %></p>
+                            <p class="astronaut-data"><%= astronaut.hours_in_space %> hours in space</p>
+                        </div>
+                    </a>
+                </div>
+            <% }); %>
+        </div>
+    <% } else { %>
         <p>No astronauts available.</p>
-      <% } %>
+    <% } %>
 
       <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
 </body>
