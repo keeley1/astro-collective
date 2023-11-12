@@ -1,31 +1,39 @@
 /* importing fonts */ 
-@import url('https://fonts.googleapis.com/css2?family=Sometype+Mono:wght@500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans&family=Sometype+Mono:wght@400;500&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans&family=Roboto+Mono:wght@300;400&family=Sometype+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono&family=Open+Sans&family=Roboto+Mono:wght@300;400&family=Sometype+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono&family=Open+Sans&family=Roboto&family=Roboto+Mono:wght@300;400&display=swap');
 
 html {
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'Roboto Mono', monospace;
+    background-color: rgb(14, 5, 63);
 }
 
 #app-title {
     font-family: 'Sometype Mono', monospace, sans-serif;
+    font-weight: 500px;
     margin: 20px;
     text-decoration: none;
-    color: black;
+    color: white;
 }
 
 #sign-up {
-    color: black;
+    transition: 0.4s ease;
+    color: rgb(192, 221, 254);
+    background-color: rgba(139, 168, 201, 0.3);
     text-decoration: none;
+    border-radius: 5px;
     margin: 20px;
     padding: 10px;
-    border-radius: 3px;
     position: absolute;
     top: 0;
     right: 0;
 }
 
 #sign-up:hover {
-    background-color: rgb(218, 218, 218);
+    color: white;
+    border-radius: 20px;
 }
 
 .centered-form-content {
@@ -33,6 +41,7 @@ html {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    color: white;
 }
 
 .form-details {
@@ -40,32 +49,41 @@ html {
 }
 
 .form-data {
+    font-family: 'Roboto Mono', monospace;
     width: 100%; 
     margin-bottom: 10px;
     margin-top: 10px;
     padding: 10px;
     box-sizing: border-box;
+    background-color: rgba(93, 112, 136, 0.3);
+    color: white;
+    border: none;
+    border-radius: 5px;
 }
 
 .form-button {
-    color: black;
-    border-radius: 3px;
+    transition: 0.4s ease;
+    color: rgb(14, 5, 63);
+    background-color: rgba(139, 168, 201, 0.8);
+    font-family: 'Roboto Mono', monospace;
+    font-weight: 900;
+    border-radius: 5px;
     border: none;
     padding: 10px;
-    background-color: rgb(218, 218, 218);
     cursor: pointer;
     width: 100%;
     box-sizing: border-box;
     margin-top: 10px;
 }
 
-/*
+
 .form-button:hover {
-    background-color: rgb(218, 218, 218);
-}*/
+    border-radius: 20px;
+    color: black;
+}
 
 .below-form-button {
-    color: rgb(19, 19, 205);
+    color: rgba(139, 168, 201);
     text-decoration: none;
 }
 
@@ -73,14 +91,19 @@ html {
     text-decoration: underline;
 }
 
-/*astronaut pages*/
+/* astronaut pages */
 .astro-list {
     list-style: none;
+}
+
+.astro-list:hover {
+    color: rgb(102, 102, 102);
 }
 
 .astronaut-container {
     display: flex;
     flex-wrap: wrap; 
+    justify-content: center;
 }
 
 .astronaut-container a {
@@ -89,14 +112,95 @@ html {
 }
 
 .astronaut {
-    flex: 0 0 40%;
+    transition: 0.4s ease;
+    flex: 0 0 25%;
     margin: 1%;
     padding: 10px;
-    background-color: rgb(238, 238, 238);
+    border-radius: 5px;
+    background-color: rgba(93, 112, 136, 0.3);
+    color: rgb(192, 221, 254);
+    text-align: center;
 }
 
-/*add astronaut page*/
+.astronaut:hover {
+    color: white;
+    background-color: rgba(139, 168, 201, 0.3);
+}
+
+.astronaut-title {
+    font-weight: 600;
+}
+
+.astronaut-photo {
+    width:  200px;
+    height: 250px;
+    object-fit: cover;
+}
+
+.astronaut-text-style {
+    font-weight: 200;
+}
+
+.add-astro-position {
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+.add-astro {
+    transition: 0.4s ease;
+    text-decoration: none;
+    background-color: rgba(139, 168, 201, 0.3);
+    color: rgb(192, 221, 254);
+    font-size: 20px;
+    border-radius: 50%;
+    margin-right: 65px;
+    padding: 5px 12px 5px 12px;
+}
+
+.add-astro:hover {
+    color: white;
+    border-radius: 5px;
+}
+
+/* add astronaut page */
 #astro-profile {
     height: 200px;
     white-space: pre-wrap;
+}
+
+/* single astronaut page */
+.single-astronaut-container {
+    margin: 30px;
+    padding: 20px;
+    background-color: rgba(93, 112, 136, 0.3);
+    color: white;
+}
+
+.single-astro-back {
+    transition: 0.4s ease;
+    text-decoration: none;
+    background-color: rgba(139, 168, 201, 0.3);
+    color: rgb(192, 221, 254);
+    padding: 5px 12px 5px 12px;
+    border-radius: 50%;
+    font-size: 20px;
+    margin-left: 20px;
+}
+
+.single-astro-back:hover {
+    color: white;
+    border-radius: 5px;
+}
+
+.single-astro-flex-container {
+    display: flex;
+    flex-direction: row;
+}
+
+.single-astro-flex-two {
+    margin-left: 20px;
+}
+
+.single-astronaut-title {
+    font-size: 30px;
 }
