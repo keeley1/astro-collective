@@ -11,20 +11,19 @@
     <h1><a href="/" id="app-title"><%=appName%></a></h1>
     <p><a href="register" id="sign-up">sign up</a></p>
 
+    <p><a href="/astronauts" class="single-astro-back"><</a></p>
+    
     <% if (astronaut.length > 0) { %>
         <div class="single-astronaut-container">
             <% astronaut.forEach(function(astronaut) { %>
                 <div class="single-astronaut">
-                    <div class="single-astronaut-top">
-                        <p><a href="/astronauts" class="single-astro-back"><</a></p>
-                        <p class="single-astro-back-text"><a href="/astronauts" class="single-astro-back-link">back to all astronauts</a></p>
-                        <h3 class="single-astronaut-title"><%= astronaut.astronaut_name %></h3>
-                    </div>
                     <div class="single-astro-flex-container">
                         <div class="single-astro-flex-one">
                             <img src="<%= astronaut.astronaut_photo %>" alt="<%= astronaut.astronaut_name %>" class="single-astro-photo" width="300">
                         </div>
                         <div class="single-astro-flex-two">
+                            <h3 class="single-astronaut-title"><%= astronaut.astronaut_name %></h3>
+
                             <% if (astronaut.date_of_death === 'N/A' || astronaut.date_of_death === null) { %>
                                 <p class="single-astronaut-data"><%= astronaut.date_of_birth %></p>
                             <% } else { %>
