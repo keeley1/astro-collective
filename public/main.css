@@ -150,16 +150,40 @@ html {
     background-color: rgb(247, 247, 247);
 }
 
+.single-astronaut-top {
+    display: flex;
+    flex-direction: row;
+    flex: 0 0 25%;
+    margin: 1%;
+    margin-top: 0;
+}
+
 .single-astro-back {
     text-decoration: none;
     color: black;
     transition: 0.3s;
     font-size: 30px;
     font-weight: 100;
+    flex: 0 0 25%;
+    margin: 1%;
 }
 
 .single-astro-back:hover {
     color: #198d78;
+}
+
+.single-astro-back-text {
+    flex: 0 0 25%;
+    margin-bottom: 1.9%;
+    margin-top: 1.9%;
+    margin-left: 0.5%;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.single-astro-back-link {
+    text-decoration: none;
+    color: inherit;
 }
 
 .single-astro-list {
@@ -177,4 +201,7 @@ html {
 
 .single-astronaut-title {
     font-size: 30px;
+    flex: 0 0 25%;
+    margin: 1%;
+    margin-left: -50px;
 }
