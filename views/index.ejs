@@ -8,9 +8,27 @@
     <link rel="stylesheet"  type="text/css" href="main.css" />
 </head>
 <body>
-    <h1><a href="/" id="app-title"><%=appName%></a></h1>
-    <p><a href="register" id="sign-up">sign up</a></p>
+    <% if (appState === 'loggedin') { %>
+        <p><a href="logout" id="sign-up">log out</a></p>
+    <% } else { %>
+        <p><a href="register" id="sign-up">sign up</a></p>
+    <% } %>
 
-    <p><a href="astronauts">astronauts</a></p>
+    <div class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-item-one">
+                <h1><a href="/" id="app-title"><%=appName%></a></h1>
+            </div>
+            <div class="navbar-item-two">
+                <p><a href="astronauts" class="navbar-astro">astronauts</a></p>
+            </div>
+            <div class="navbar-item-two">
+                <p><a href="missions" class="navbar-astro">missions</a></p>
+            </div>
+            <div class="navbar-item-two">
+                <p><a href="spacecraft" class="navbar-astro">spacecraft</a></p>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

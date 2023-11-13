@@ -18,10 +18,20 @@ module.exports = function(app, appData) {
 
     // handling routes
     app.get('/', function(req, res) {
-        res.render('index.ejs', appData);
+        if (req.session.userId) {
+            let appData2 = Object.assign({}, appData, { appState: "loggedin" });
+            res.render('index.ejs', appData2);
+        } else {
+            let appData2 = Object.assign({}, appData, { appState: "notloggedin" });
+            res.render('index.ejs', appData2);
+        }
     });
     app.get('/register', function(req, res) {
-        res.render('register.ejs', appData);
+        if (req.session.userId) {
+            res.redirect('/');
+        } else {
+            res.render('register.ejs', appData);
+        }
     });
     app.post('/registered', function(req, res) {
         const saltRounds = 10; 
@@ -45,7 +55,11 @@ module.exports = function(app, appData) {
         }); 
     });
     app.get('/login', function(req, res) {
-        res.render('login.ejs', appData);
+        if (req.session.userId) {
+            res.redirect('/');
+        } else {
+            res.render('login.ejs', appData);
+        }
     });
     app.post('/loggedin', function(req, res) {
         let sqlquery = "SELECT hashedPassword FROM user_details WHERE username = ?";
@@ -67,9 +81,8 @@ module.exports = function(app, appData) {
                         } else if (result === true) {
                             // save user session here, when login is successful 
                             req.session.userId = req.body.username; 
-
                             userName = req.body.username;
-                            res.render('loggedin.ejs', { userName: userName, appData: appData });
+                            res.render('loggedin.ejs', { userName: userName, appData: appData, appState: "loggedin" });
                             
                         } else {
                             res.send('Error');
@@ -78,6 +91,14 @@ module.exports = function(app, appData) {
                 }
             }
         });
+    });
+    app.get('/logout' , function(req, res) {
+        req.session.destroy(err => {
+            if (err) {
+                return res.redirect('/')
+            }
+            res.send('you are now logged out! <a href=' + './' + '>Home</a>');
+        })
     });
     app.get('/astronauts', function(req, res) {
         // select all data from astronauts
@@ -97,13 +118,26 @@ module.exports = function(app, appData) {
                 };
             });
 
-            let astronautData = Object.assign({}, appData, { allAstronauts: astronautsWithFormattedDates });
+            let astronautData = Object.assign({}, appData, { allAstronauts: astronautsWithFormattedDates }, { currentPage: "astronauts" });
             console.log(astronautData);
-            res.render('astronauts.ejs', astronautData);
+
+            if (req.session.userId) {
+                let appData2 = Object.assign({}, astronautData, { appState: "loggedin" });
+                res.render('astronauts.ejs', appData2);
+            } else {
+                let appData2 = Object.assign({}, astronautData, { appState: "notloggedin" });
+                res.render('astronauts.ejs', appData2);
+            }
         });
     });
     app.get('/addastronaut', redirectLogin, function(req, res) {
-        res.render('add-astronaut.ejs', appData);
+        if (req.session.userId) {
+            let appData2 = Object.assign({}, appData, { appState: "loggedin" });
+            res.render('add-astronaut.ejs', appData2);
+        } else {
+            let appData2 = Object.assign({}, appData, { appState: "notloggedin" });
+            res.render('add-astronaut.ejs', appData2);
+        }
     });
     app.post('/addedastronaut', function(req, res) {
         let sqlquery = "INSERT INTO astronauts (astronaut_name, astronaut_photo, date_of_birth, date_of_death, country, hours_in_space, astronaut_profile) VALUES (?,?,?,?,?,?,?)";
@@ -141,10 +175,38 @@ module.exports = function(app, appData) {
                 };
             });
 
-            let astronautData = Object.assign({}, appData, { astronaut: astronautWithFormattedDates });
+            let astronautData = Object.assign({}, appData, { astronaut: astronautWithFormattedDates }, { currentPage: "astronauts" });
             console.log(astronautData);
-            res.render('single-astronaut.ejs', astronautData);
+
+            if (req.session.userId) {
+                let appData2 = Object.assign({}, astronautData, { appState: "loggedin" });
+                res.render('single-astronaut.ejs', appData2);
+            } else {
+                let appData2 = Object.assign({}, astronautData, { appState: "notloggedin" });
+                res.render('single-astronaut.ejs', appData2);
+            }
         });
-        //res.send(astroID);
+    });
+    app.get('/missions', function(req, res) {
+        let missionData = Object.assign({}, appData, { currentPage: "missions" });
+
+        if (req.session.userId) {
+            let appData2 = Object.assign({}, missionData, { appState: "loggedin" });
+            res.render('missions.ejs', appData2);
+        } else {
+            let appData2 = Object.assign({}, missionData, { appState: "notloggedin" });
+            res.render('missions.ejs', appData2);
+        }
+    });
+    app.get('/spacecraft', function(req, res) {
+        let craftData = Object.assign({}, appData, { currentPage: "spacecraft" });
+
+        if (req.session.userId) {
+            let appData2 = Object.assign({}, craftData, { appState: "loggedin" });
+            res.render('spacecraft.ejs', appData2);
+        } else {
+            let appData2 = Object.assign({}, craftData, { appState: "notloggedin" });
+            res.render('spacecraft.ejs', appData2);
+        }
     });
 }
