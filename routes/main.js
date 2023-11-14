@@ -179,25 +179,31 @@ module.exports = function(app, appData) {
         });
     });
     app.get('/search', function(req, res) {
-        let sqlquery = "SELECT * FROM astronauts WHERE astronaut_name LIKE ?";
-        let newrecord = [`%${req.query.searchbox}%`];
+        console.log('search = '+ req.query.searchbox);
+        if (req.query.searchbox.trim() === "") {
+            res.redirect('/astronauts');
+        }
+        else {
+            let sqlquery = "SELECT * FROM astronauts WHERE astronaut_name LIKE ?";
+            let newrecord = [`%${req.query.searchbox}%`];
 
-        db.query(sqlquery, newrecord, (err, result) => {
-            if (err) {
-                res.redirect('./');
-            }
+            db.query(sqlquery, newrecord, (err, result) => {
+                if (err) {
+                    res.redirect('./');
+                }
 
-            let astronautData = Object.assign({}, appData, { searchResult: result }, { currentPage: "astronauts" });
-            console.log(astronautData);
+                let astronautData = Object.assign({}, appData, { searchResult: result }, { currentPage: "astronauts" });
+                console.log(astronautData);
 
-            if (req.session.userId) {
-                let appData2 = Object.assign({}, astronautData, { appState: "loggedin" });
-                res.render('astronaut-search-result.ejs', appData2);
-            } else {
-                let appData2 = Object.assign({}, astronautData, { appState: "notloggedin" });
-                res.render('astronaut-search-result.ejs', appData2);
-            }
-        });
+                if (req.session.userId) {
+                    let appData2 = Object.assign({}, astronautData, { appState: "loggedin" });
+                    res.render('astronaut-search-result.ejs', appData2);
+                } else {
+                    let appData2 = Object.assign({}, astronautData, { appState: "notloggedin" });
+                    res.render('astronaut-search-result.ejs', appData2);
+                }
+            });
+        }
     });
     app.get('/missions', function(req, res) {
         let missionData = Object.assign({}, appData, { currentPage: "missions" });
@@ -219,6 +225,17 @@ module.exports = function(app, appData) {
         } else {
             let appData2 = Object.assign({}, craftData, { appState: "notloggedin" });
             res.render('spacecraft.ejs', appData2);
+        }
+    });
+    app.get('/about', function(req, res) {
+        let craftData = Object.assign({}, appData, { currentPage: "about" });
+
+        if (req.session.userId) {
+            let appData2 = Object.assign({}, craftData, { appState: "loggedin" });
+            res.render('about.ejs', appData2);
+        } else {
+            let appData2 = Object.assign({}, craftData, { appState: "notloggedin" });
+            res.render('about.ejs', appData2);
         }
     });
 }

@@ -290,3 +290,9 @@ html {
     color: white;
     border-radius: 5px;
 }
+
+.astronaut-unavailable {
+    color: white;
+    margin-top: 180px;
+    text-align: center;
+}

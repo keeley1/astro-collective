@@ -28,11 +28,14 @@
             <div class="navbar-item-two">
                 <p><a href="spacecraft" class="navbar-astro">spacecraft</a></p>
             </div>
+            <div class="navbar-item-two">
+                <p><a href="about" class="navbar-astro">about</a></p>
+            </div>
         </div>
     </div>
 
     <form action="/search" method="GET" class="search-form">
-        <input id="search-box" class="search-bar" type="text" name="searchbox" placeholder="search astronaut">
+        <input id="search-box" class="search-bar" type="text" name="searchbox" placeholder="search astronauts">
         <input type="submit" value="Search" class="search-button">
     </form>
 
@@ -56,7 +59,7 @@
             <% }); %>
         </div>
     <% } else { %>
-        <p>No astronauts available.</p>
+        <p class="astronaut-unavailable">No astronauts available.</p>
     <% } %>
 
 </body>
