@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>astronauts</title>
+    <title>search astronauts</title>
     <link rel="stylesheet" type="text/css" href="main.css" />
 </head>
 <body>
@@ -39,13 +39,11 @@
         <input type="submit" value="Search" class="search-button">
     </form>
 
-    <div class="add-astro-position">
-        <p><a href="addastronaut" class="add-astro">+</a></p>
-    </div>
+    <p><a href="/astronauts" class="search-astro-back"><</a></p>
 
-    <% if (allAstronauts.length > 0) { %>
+    <% if (searchResult.length > 0) { %>
         <div class="astronaut-container">
-            <% allAstronauts.forEach(function(astronaut) { %>
+            <% searchResult.forEach(function(astronaut) { %>
                 <div class="astronaut">
                     <a href="astronaut/<%= astronaut.astronaut_id %>">
                         <h3 class="astronaut-title"><%= astronaut.astronaut_name %></h3>
@@ -59,7 +57,7 @@
             <% }); %>
         </div>
     <% } else { %>
-        <p class="astronaut-unavailable">No astronauts available.</p>
+        <p class="astronaut-unavailable">No matching astronauts</p>
     <% } %>
 
 </body>
