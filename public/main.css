@@ -36,6 +36,7 @@ html {
     border-radius: 20px;
 }
 
+/* navbar styling */
 .navbar {
     display: flex;
 }
@@ -140,6 +141,7 @@ html {
     display: flex;
     flex-wrap: wrap; 
     justify-content: center;
+    margin-top: -15px;
 }
 
 .astronaut-container a {
@@ -239,4 +241,52 @@ html {
 
 .single-astronaut-title {
     font-size: 30px;
+}
+
+/*search form*/
+.search-form {
+    margin-left: 40px;
+    margin-top: 10px;
+}
+
+.search-bar {
+    font-family: 'Roboto Mono', monospace;
+    padding: 10px;
+    background-color: rgba(93, 112, 136, 0.3);
+    color: white;
+    border: none;
+    border-radius: 5px;
+}
+
+.search-button {
+    transition: 0.4s ease;
+    color: rgb(14, 5, 63);
+    background-color: rgba(139, 168, 201, 0.8);
+    font-family: 'Roboto Mono', monospace;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.search-button:hover {
+    border-radius: 20px;
+    background-color: rgba(139, 168, 201, 0.9);
+    color: black;
+}
+
+.search-astro-back {
+    transition: 0.4s ease;
+    text-decoration: none;
+    background-color: rgba(139, 168, 201, 0.3);
+    color: rgb(192, 221, 254);
+    padding: 5px 12px 5px 12px;
+    border-radius: 50%;
+    font-size: 20px;
+    margin-left: 40px;
+}
+
+.search-astro-back:hover {
+    color: white;
+    border-radius: 5px;
 }

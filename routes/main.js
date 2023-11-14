@@ -108,17 +108,8 @@ module.exports = function(app, appData) {
             if (err) {
                 res.redirect('./');
             }
-            
-            // format astronaut dates to display how desired
-            const astronautsWithFormattedDates = result.map(astronaut => {
-                return {
-                    ...astronaut,
-                    date_of_birth: formatDate(astronaut.date_of_birth),
-                    date_of_death: formatDate(astronaut.date_of_death),
-                };
-            });
 
-            let astronautData = Object.assign({}, appData, { allAstronauts: astronautsWithFormattedDates }, { currentPage: "astronauts" });
+            let astronautData = Object.assign({}, appData, { allAstronauts: result }, { currentPage: "astronauts" });
             console.log(astronautData);
 
             if (req.session.userId) {
@@ -184,6 +175,27 @@ module.exports = function(app, appData) {
             } else {
                 let appData2 = Object.assign({}, astronautData, { appState: "notloggedin" });
                 res.render('single-astronaut.ejs', appData2);
+            }
+        });
+    });
+    app.get('/search', function(req, res) {
+        let sqlquery = "SELECT * FROM astronauts WHERE astronaut_name LIKE ?";
+        let newrecord = [`%${req.query.searchbox}%`];
+
+        db.query(sqlquery, newrecord, (err, result) => {
+            if (err) {
+                res.redirect('./');
+            }
+
+            let astronautData = Object.assign({}, appData, { searchResult: result }, { currentPage: "astronauts" });
+            console.log(astronautData);
+
+            if (req.session.userId) {
+                let appData2 = Object.assign({}, astronautData, { appState: "loggedin" });
+                res.render('astronaut-search-result.ejs', appData2);
+            } else {
+                let appData2 = Object.assign({}, astronautData, { appState: "notloggedin" });
+                res.render('astronaut-search-result.ejs', appData2);
             }
         });
     });
