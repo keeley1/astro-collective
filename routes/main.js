@@ -1,4 +1,4 @@
-const { check } = require('express-validator');
+const { check, validationResult } = require('express-validator'); 
 
 module.exports = function(app, appData) {
 
@@ -33,26 +33,59 @@ module.exports = function(app, appData) {
             res.render('register.ejs', appData);
         }
     });
-    app.post('/registered', function(req, res) {
-        const saltRounds = 10; 
-        const plainPassword = req.body.password;
+    app.post('/registered', 
+    [
+    check('first').matches(/^[a-zA-Z]+$/),
+    check('last').matches(/^[a-zA-Z]+$/),
+    check('email').isEmail(),
+    check('username').isLength({ max: 15 }),
+    check('password').matches(/^(?=.*\d)(?=.*[A-Z])(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?~\\-]).{8,}$/),
+    ], function(req, res) {
+        const errors = validationResult(req); 
 
-        bcrypt.hash(plainPassword, saltRounds, function(err, hashedPassword) { 
-            let sqlquery = "INSERT INTO user_details (username, firstname, surname, email, hashedPassword) VALUES (?,?,?,?,?)";
-            
-            // execute sql query
-            let newrecord = [req.body.username, req.body.first, req.body.last, req.body.email, hashedPassword];
-            
-            db.query(sqlquery, newrecord, (err, result) => {
+        if (!errors.isEmpty()) { 
+            console.log("Validation errors:", errors.array());
+            console.log("invalid form data");
+            res.redirect('/register'); } 
+        else {
+            const saltRounds = 10; 
+            const plainPassword = req.body.password;
+
+            // check if username exists in database
+            let usernameQuery = "SELECT username FROM user_details WHERE username = ?";
+            let newrecord = [req.body.username];
+
+            db.query(usernameQuery, newrecord, (err, result) => {
                 if (err) {
                     return console.error(err.message);
                 }
-                else {
-                    userName = req.body.username;
-                    res.render('registered.ejs', { userName: userName, appData: appData });
+    
+                const existingUsername = result;
+                console.log(existingUsername);
+    
+                if (existingUsername.length = 0) {
+                    console.log("username already exists");
+                    return res.redirect('/register');
                 }
+                
+                bcrypt.hash(plainPassword, saltRounds, function(err, hashedPassword) { 
+                    let sqlquery = "INSERT INTO user_details (username, firstname, surname, email, hashedPassword) VALUES (?,?,?,?,?)";
+            
+                    // execute sql query
+                    let newrecord = [req.body.username, req.body.first, req.body.last, req.body.email, hashedPassword];
+            
+                    db.query(sqlquery, newrecord, (err, result) => {
+                        if (err) {
+                            return console.error(err.message);
+                        }
+                        else {
+                            userName = req.body.username;
+                            res.render('registered.ejs', { userName: userName, appData: appData });
+                        }
+                    });
+                }); 
             });
-        }); 
+        }  
     });
     app.get('/login', function(req, res) {
         if (req.session.userId) {

@@ -4,7 +4,8 @@ const path = require('path');
 const ejs = require('ejs');
 const mysql = require('mysql');
 const bodyParser = require('body-parser');
-const session = require('express-session')
+const session = require('express-session');
+var validator = require ('express-validator');
 
 const app = express();
 const port = 8000;
