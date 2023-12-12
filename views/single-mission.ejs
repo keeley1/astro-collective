@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>astronaut</title>
+    <title>mission</title>
     <link rel="stylesheet"  type="text/css" href="/main.css" />
 </head>
 <body>
@@ -20,13 +20,13 @@
                 <h1><a href="/" id="app-title"><%=appName%></a></h1>
             </div>
             <div class="navbar-item-two">
-                <p><a href="/astronauts" class="navbar-astro <%= currentPage === 'astronauts' ? 'active' : '' %>">astronauts</a></p>
+                <p><a href="astronauts" class="navbar-astro">astronauts</a></p>
             </div>
             <div class="navbar-item-two">
-                <p><a href="/missions" class="navbar-astro">missions</a></p>
+                <p><a href="missions" class="navbar-astro <%= currentPage === 'missions' ? 'active' : '' %>">missions</a></p>
             </div>
             <div class="navbar-item-two">
-                <p><a href="/spacecraft" class="navbar-astro">spacecraft</a></p>
+                <p><a href="spacecraft" class="navbar-astro">spacecraft</a></p>
             </div>
             <div class="navbar-item-two">
                 <p><a href="about" class="navbar-astro">about</a></p>
@@ -34,36 +34,30 @@
         </div>
     </div>
 
-    <p><a href="/astronauts" class="single-data-back"><</a></p>
-    
-    <% if (astronaut.length > 0) { %>
+    <p><a href="/missions" class="single-data-back"><</a></p>
+
+    <% if (mission.length > 0) { %>
         <div class="single-data-container">
-            <% astronaut.forEach(function(astronaut) { %>
+            <% mission.forEach(function(mission) { %>
                 <div class="single-data">
                     <div class="single-data-flex-container">
                         <div class="single-data-flex-one">
-                            <img src="<%= astronaut.astronaut_photo %>" alt="<%= astronaut.astronaut_name %>" class="single-data-photo" width="300">
+                            <img src="<%= mission.mission_insignia %>" alt="<%= mission.mission_name %>" class="single-data-photo" width="300">
                         </div>
                         <div class="single-data-flex-two">
-                            <h3 class="single-data-title"><%= astronaut.astronaut_name %></h3>
-
-                            <% if (astronaut.date_of_death === 'N/A' || astronaut.date_of_death === null) { %>
-                                <p class="single-data-data"><%= astronaut.date_of_birth %></p>
-                            <% } else { %>
-                                <p class="single-data-data"><%= astronaut.date_of_birth %> - <%= astronaut.date_of_death %></p>
-                            <% } %>
-
-                            <p class="single-data-data">Country: <%= astronaut.country %></p>
-                            <p class="single-data-data">Hours in Space: <%= astronaut.hours_in_space %></p>
+                            <h3 class="single-data-title"><%= mission.mission_name %></h3>
+                            <p class="single-data-data">Space agency: <%= mission.space_agency %></p>
+                            <p class="single-data-data">Launch site: <%= mission.launch_location %></p>
+                            <p class="single-data-data">Spacecraft: <%= mission.spacecraft %></p>
+                            <p class="single-data-data"><%= mission.launch_date %> - <%= mission.return_date %></p>
                         </div>
                     </div>
-                    <p class="single-data-data" id="single-data-profile">Astronaut Profile: <%- astronaut.astronaut_profile.replace(/\r\n/g, '<br>') %></p>    
+                    <p class="single-data-data" id="single-data-profile">Mission Profile: <%- mission.mission_details.replace(/\r\n/g, '<br>') %></p>    
                 </div>
              <% }); %>
         </div>
     <% } else { %>
         <p>No astronauts available.</p>
     <% } %>
-
 </body>
 </html>

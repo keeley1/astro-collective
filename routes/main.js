@@ -170,9 +170,9 @@ module.exports = function(app, appData) {
         check('astrophoto').isURL(),
         check('astrodod').optional(),
         check('astrocountry').notEmpty().isLength({ max:60 }),
-    ]
-    ,
-    function(req, res) {
+        check('astrospacetime').notEmpty(),
+        check('astroprofile').optional()
+    ], function(req, res) {
         const errors = validationResult(req); 
         let dateOfDeath = req.body.astrodod;
 
@@ -244,7 +244,7 @@ module.exports = function(app, appData) {
             }
         });
     });
-    app.get('/search', function(req, res) {
+    app.get('/searchastronauts', function(req, res) {
         console.log('search = '+ req.query.searchbox);
         if (req.query.searchbox.trim() === "") {
             res.redirect('/astronauts');
@@ -272,14 +272,84 @@ module.exports = function(app, appData) {
         }
     });
     app.get('/missions', function(req, res) {
-        let missionData = Object.assign({}, appData, { currentPage: "missions" });
+        let sqlquery = "SELECT * FROM missions";
 
-        if (req.session.userId) {
-            let appData2 = Object.assign({}, missionData, { appState: "loggedin" });
-            res.render('missions.ejs', appData2);
-        } else {
-            let appData2 = Object.assign({}, missionData, { appState: "notloggedin" });
-            res.render('missions.ejs', appData2);
+        db.query(sqlquery, (err, result) => {
+            if (err) {
+                res.redirect('./');
+            }
+
+            let missionData = Object.assign({}, appData, { allMissions: result }, { currentPage: "missions" });
+            console.log(missionData);
+
+            if (req.session.userId) {
+                let appData2 = Object.assign({}, missionData, { appState: "loggedin" });
+                res.render('missions.ejs', appData2);
+            } else {
+                let appData2 = Object.assign({}, missionData, { appState: "notloggedin" });
+                res.render('missions.ejs', appData2);
+            }
+        });
+    });
+    app.get('/mission/:missionID', function(req, res) {
+        // (needs error handling)
+        const astroID = req.params.missionID;
+
+        // sql query to select specific astronaut
+        let sqlquery = "SELECT * FROM missions WHERE mission_id = ?"
+        let newrecord = [req.params.missionID];
+
+        db.query(sqlquery, newrecord, (err, result) => {
+            if (err) {
+                res.redirect('./');
+            }
+            
+            // format mission dates to display how desired
+            const missionWithFormattedDates = result.map(mission => {
+                return {
+                    ...mission,
+                    launch_date: formatDate(mission.launch_date),
+                    return_date: formatDate(mission.return_date),
+                };
+            });
+
+            let missionData = Object.assign({}, appData, { mission: missionWithFormattedDates }, { currentPage: "missions" });
+            console.log(missionData);
+
+            if (req.session.userId) {
+                let appData2 = Object.assign({}, missionData, { appState: "loggedin" });
+                res.render('single-mission.ejs', appData2);
+            } else {
+                let appData2 = Object.assign({}, missionData, { appState: "notloggedin" });
+                res.render('single-mission.ejs', appData2);
+            }
+        });
+    });
+    app.get('/searchmissions', function(req, res) {
+        console.log('search = '+ req.query.searchbox);
+        if (req.query.searchbox.trim() === "") {
+            res.redirect('/missions');
+        }
+        else {
+            let sqlquery = "SELECT * FROM missions WHERE mission_name LIKE ?";
+            let newrecord = [`%${req.query.searchbox}%`];
+
+            db.query(sqlquery, newrecord, (err, result) => {
+                if (err) {
+                    res.redirect('./');
+                }
+
+                let missionData = Object.assign({}, appData, { searchResult: result }, { currentPage: "missions" });
+                console.log(missionData);
+
+                if (req.session.userId) {
+                    let appData2 = Object.assign({}, missionData, { appState: "loggedin" });
+                    res.render('mission-search-result.ejs', appData2);
+                } else {
+                    let appData2 = Object.assign({}, missionData, { appState: "notloggedin" });
+                    res.render('mission-search-result.ejs', appData2);
+                }
+            });
         }
     });
     app.get('/spacecraft', function(req, res) {
