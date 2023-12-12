@@ -156,11 +156,13 @@ module.exports = function(app, appData) {
         });
     });
     app.get('/addastronaut', redirectLogin, function(req, res) {
+        let astronautData = Object.assign({}, appData, { currentPage: "astronauts" });
+
         if (req.session.userId) {
-            let appData2 = Object.assign({}, appData, { appState: "loggedin" });
+            let appData2 = Object.assign({}, astronautData, { appState: "loggedin" });
             res.render('add-astronaut.ejs', appData2);
         } else {
-            let appData2 = Object.assign({}, appData, { appState: "notloggedin" });
+            let appData2 = Object.assign({}, astronautData, { appState: "notloggedin" });
             res.render('add-astronaut.ejs', appData2);
         }
     });
@@ -290,6 +292,50 @@ module.exports = function(app, appData) {
                 res.render('missions.ejs', appData2);
             }
         });
+    });
+    app.get('/addmission', redirectLogin, function(req, res) {
+        let missionData = Object.assign({}, appData, { currentPage: "missions" });
+
+        if (req.session.userId) {
+            let appData2 = Object.assign({}, missionData, { appState: "loggedin" });
+            res.render('add-mission.ejs', appData2);
+        } else {
+            let appData2 = Object.assign({}, missionData, { appState: "notloggedin" });
+            res.render('add-mission.ejs', appData2);
+        }
+    });
+    app.post('/addedmission', 
+    [
+        check('missionname').notEmpty().isLength({ max:200 }),
+        check('missioninsignia').notEmpty().isURL(),
+        check('missionlaunch').notEmpty(),
+        check('missionreturn').notEmpty(),
+        check('missionlocation').notEmpty().isLength({ max:100 }),
+        check('missionagency').notEmpty().isLength({ max:100 }),
+        check('missioncraft').notEmpty().isLength({ max:100 }),
+        check('missiondetails').optional().isLength({ max:5000 })
+    ], function(req, res) {
+        const errors = validationResult(req); 
+
+        if (!errors.isEmpty()) { 
+            console.log("Validation errors:", errors.array());
+            console.log("invalid form data");
+            res.redirect('/addastronaut'); 
+        } 
+        else {
+            let sqlquery = "INSERT INTO missions (mission_name, launch_date, return_date, launch_location, space_agency, spacecraft, mission_insignia, mission_details) VALUES (?,?,?,?,?,?,?,?)";
+            let newrecord = [req.body.missionname, req.body.missionlaunch, req.body.missionreturn, req.body.missionlocation, req.body.missionagency, req.body.missioncraft, req.body.missioninsignia, req.body.missiondetails];
+
+            db.query(sqlquery, newrecord, (err, result) => {
+                if (err) {
+                    return console.error(err.message);
+                }
+                else {
+                    let name = req.body.missionname;
+                    res.send(name + " has been successfully added!");
+                }
+            });
+        }
     });
     app.get('/mission/:missionID', function(req, res) {
         // (needs error handling)

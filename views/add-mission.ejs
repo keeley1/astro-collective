@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>add mission</title>
+    <link rel="stylesheet"  type="text/css" href="main.css" />
+</head>
+<body>
+    <% if (appState === 'loggedin') { %>
+        <p><a href="logout" id="sign-up">log out</a></p>
+    <% } else { %>
+        <p><a href="register" id="sign-up">sign up</a></p>
+    <% } %>
+    
+    <div class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-item-one">
+                <h1><a href="/" id="app-title"><%=appName%></a></h1>
+            </div>
+            <div class="navbar-item-two">
+                <p><a href="astronauts" class="navbar-astro">astronauts</a></p>
+            </div>
+            <div class="navbar-item-two">
+                <p><a href="missions" class="navbar-astro <%= currentPage === 'missions' ? 'active' : '' %>">missions</a></p>
+            </div>
+            <div class="navbar-item-two">
+                <p><a href="spacecraft" class="navbar-astro">spacecraft</a></p>
+            </div>
+            <div class="navbar-item-two">
+                <p><a href="about" class="navbar-astro">about</a></p>
+            </div>
+        </div>
+    </div>
+
+    <p><a href="/missions" class="single-data-back"><</a></p>
+
+    <div class="centered-form-content">
+        <h2>Add mission</h2>
+        <form method="POST" action="/addedmission" class="form-details">
+            <label for="mission-name">Mission name:</label><br>
+            <input id="mission-name" type="text" name="missionname" placeholder="Mission name" class="form-data"/><br>
+
+            <label for="mission-photo">Mission insignia:</label><br>
+            <input id="mission-photo" type="text" name="missioninsignia" placeholder="URL of mission insignia" class="form-data"/><br>
+
+            <label for="mission-launch">Launch date:</label><br>
+            <input id="mission-launch" type="date" name="missionlaunch" class="form-data"/><br>
+
+            <label for="mission-return">Return date:</label><br>
+            <input id="mission-return" type="date" name="missionreturn" class="form-data"/><br>
+
+            <label for="mission-location">Launch location:</label><br>
+            <input id="mission-location" type="text" name="missionlocation" placeholder="Launch location" class="form-data"/><br>
+
+            <label for="mission-agency">Space agency:</label><br>
+            <input id="mission-agency" type="text" name="missionagency" placeholder="Space agency" class="form-data"/><br>
+
+            <label for="mission-craft">Spacecraft:</label><br>
+            <input id="mission-craft" type="text" name="missioncraft" placeholder="Spacecraft" class="form-data"/><br>
+
+            <label for="mission-details">Mission details:</label><br>
+            <textarea id="mission-details" name="missiondetails" cols="30" rows="10" placeholder="Mission goal, information, facts, etc" class="form-data"></textarea><br>
+
+            <input type="submit" value="submit" class="form-button"/>
+        </form>
+
+    </div>
+</body>
+</html>
