@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>search missions</title>
-    <link rel="stylesheet" type="text/css" href="main.css" />
+    <title>rockets</title>
+    <link rel="stylesheet"  type="text/css" href="main.css" />
 </head>
 <body>
     <% if (appState === 'loggedin') { %>
@@ -13,7 +13,7 @@
     <% } else { %>
         <p><a href="register" id="sign-up">sign up</a></p>
     <% } %>
-    
+
     <div class="navbar">
         <div class="navbar-container">
             <div class="navbar-item-one">
@@ -23,42 +23,42 @@
                 <p><a href="astronauts" class="navbar-astro">astronauts</a></p>
             </div>
             <div class="navbar-item-two">
-                <p><a href="missions" class="navbar-astro <%= currentPage === 'missions' ? 'active' : '' %>">missions</a></p>
+                <p><a href="missions" class="navbar-astro">missions</a></p>
             </div>
             <div class="navbar-item-two">
-                <p><a href="rockets" class="navbar-astro">rockets</a></p>
+                <p><a href="spacecraft" class="navbar-astro <%= currentPage === 'rockets' ? 'active' : '' %>">rockets</a></p>
             </div>
             <div class="navbar-item-two">
                 <p><a href="about" class="navbar-astro">about</a></p>
             </div>
         </div>
     </div>
-
+    
     <form action="/searchmissions" method="GET" class="search-form">
         <input id="search-box" class="search-bar" type="text" name="searchbox" placeholder="search missions">
         <input type="submit" value="Search" class="search-button">
     </form>
 
-    <p><a href="/missions" class="search-data-back"><</a></p>
+    <div class="add-data-position">
+        <p><a href="addmission" class="add-data">+</a></p>
+    </div>
 
-    <% if (searchResult.length > 0) { %>
+    <% if (allRockets.length > 0) { %>
         <div class="data-container">
-            <% searchResult.forEach(function(mission) { %>
+            <% allRockets.forEach(function(rocket) { %>
                 <div class="data">
-                    <a href="mission/<%= mission.mission_id %>">
-                        <h3 class="data-title"><%= mission.mission_name %></h3>
-                        <img src="<%= mission.mission_insignia %>" alt="<%= mission.mission_name %>" class="mission-photo">
+                    <a href="rocket/<%= rocket.rocket_id %>">
+                        <h3 class="data-title"><%= rocket.rocket_name %></h3>
+                        <img src="<%= rocket.rocket_photo %>" alt="<%= rocket.rocket_name %>" class="rocket-photo">
                         <div class="data-text-style">
-                            <p class="extra-data"><%= mission.space_agency %></p>
-                            <p class="extra-data"><%= mission.launch_location %></p>
+                            <p class="extra-data"><%= rocket.rocket_status %></p>
                         </div>
                     </a>
                 </div>
             <% }); %>
         </div>
     <% } else { %>
-        <p class="data-unavailable">No matching missions</p>
+        <p class="data-unavailable">No rockets available.</p>
     <% } %>
-
 </body>
 </html>

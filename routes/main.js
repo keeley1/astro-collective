@@ -398,16 +398,50 @@ module.exports = function(app, appData) {
             });
         }
     });
-    app.get('/spacecraft', function(req, res) {
-        let craftData = Object.assign({}, appData, { currentPage: "spacecraft" });
+    app.get('/rockets', function(req, res) {
+        let sqlquery = "SELECT * FROM rockets";
 
-        if (req.session.userId) {
-            let appData2 = Object.assign({}, craftData, { appState: "loggedin" });
-            res.render('spacecraft.ejs', appData2);
-        } else {
-            let appData2 = Object.assign({}, craftData, { appState: "notloggedin" });
-            res.render('spacecraft.ejs', appData2);
-        }
+        db.query(sqlquery, (err, result) => {
+            if (err) {
+                res.redirect('./');
+            }
+
+            let rocketData = Object.assign({}, appData, { allRockets: result }, { currentPage: "rockets" });
+            console.log(rocketData);
+
+            if (req.session.userId) {
+                let appData2 = Object.assign({}, rocketData, { appState: "loggedin" });
+                res.render('rockets.ejs', appData2);
+            } else {
+                let appData2 = Object.assign({}, rocketData, { appState: "notloggedin" });
+                res.render('rockets.ejs', appData2);
+            }
+        });
+    });
+    app.get('/rocket/:rocketID', function(req, res) {
+        // (needs error handling)
+        const astroID = req.params.rocketID;
+
+        // sql query to select specific astronaut
+        let sqlquery = "SELECT * FROM rockets WHERE rocket_id = ?"
+        let newrecord = [req.params.rocketID];
+
+        db.query(sqlquery, newrecord, (err, result) => {
+            if (err) {
+                res.redirect('./');
+            }
+
+            let rocketData = Object.assign({}, appData, { rocket: result }, { currentPage: "rockets" });
+            console.log(rocketData);
+
+            if (req.session.userId) {
+                let appData2 = Object.assign({}, rocketData, { appState: "loggedin" });
+                res.render('single-rocket.ejs', appData2);
+            } else {
+                let appData2 = Object.assign({}, rocketData, { appState: "notloggedin" });
+                res.render('single-rocket.ejs', appData2);
+            }
+        });
     });
     app.get('/about', function(req, res) {
         let craftData = Object.assign({}, appData, { currentPage: "about" });
