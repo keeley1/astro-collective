@@ -33,8 +33,8 @@ CREATE TABLE astronauts (
   astronaut_photo VARCHAR(500),
   date_of_birth DATE,
   date_of_death DATE,
-  country VARCHAR(20),
+  country VARCHAR(60),
   hours_in_space DECIMAL(6, 1),
-  astronaut_profile VARCHAR(500),
+  astronaut_profile VARCHAR(5000),
   PRIMARY KEY(astronaut_id)
 );

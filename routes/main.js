@@ -46,7 +46,8 @@ module.exports = function(app, appData) {
         if (!errors.isEmpty()) { 
             console.log("Validation errors:", errors.array());
             console.log("invalid form data");
-            res.redirect('/register'); } 
+            res.redirect('/register'); 
+        } 
         else {
             const saltRounds = 10; 
             const plainPassword = req.body.password;
@@ -163,19 +164,51 @@ module.exports = function(app, appData) {
             res.render('add-astronaut.ejs', appData2);
         }
     });
-    app.post('/addedastronaut', function(req, res) {
-        let sqlquery = "INSERT INTO astronauts (astronaut_name, astronaut_photo, date_of_birth, date_of_death, country, hours_in_space, astronaut_profile) VALUES (?,?,?,?,?,?,?)";
-        let newrecord = [req.body.astroname, req.body.astrophoto, req.body.astrodob, req.body.astrodod, req.body.astrocountry, req.body.astrospacetime, req.body.astroprofile]
+    app.post('/addedastronaut', 
+    [
+        check('astroname').notEmpty(),
+        check('astrophoto').isURL(),
+        check('astrodod').optional(),
+        check('astrocountry').notEmpty().isLength({ max:60 }),
+    ]
+    ,
+    function(req, res) {
+        const errors = validationResult(req); 
+        let dateOfDeath = req.body.astrodod;
 
-        db.query(sqlquery, newrecord, (err, result) => {
-            if (err) {
-                return console.error(err.message);
-            }
-            else {
-                let name = req.body.astroname;
-                res.send(name + " has been successfully added!");
-            }
-        });
+        if (!errors.isEmpty()) { 
+            console.log("Validation errors:", errors.array());
+            console.log("invalid form data");
+            res.redirect('/addastronaut'); 
+        } 
+        else if (dateOfDeath == '') {
+            let sqlquery = "INSERT INTO astronauts (astronaut_name, astronaut_photo, date_of_birth, country, hours_in_space, astronaut_profile) VALUES (?,?,?,?,?,?)";
+            let newrecord = [req.body.astroname, req.body.astrophoto, req.body.astrodob, req.body.astrocountry, req.body.astrospacetime, req.body.astroprofile];
+
+            db.query(sqlquery, newrecord, (err, result) => {
+                if (err) {
+                    return console.error(err.message);
+                }
+                else {
+                    let name = req.body.astroname;
+                    res.send(name + " has been successfully added!");
+                }
+            });
+        }
+        else {
+            let sqlquery = "INSERT INTO astronauts (astronaut_name, astronaut_photo, date_of_birth, date_of_death, country, hours_in_space, astronaut_profile) VALUES (?,?,?,?,?,?,?)";
+            let newrecord = [req.body.astroname, req.body.astrophoto, req.body.astrodob, req.body.astrodod, req.body.astrocountry, req.body.astrospacetime, req.body.astroprofile];
+
+            db.query(sqlquery, newrecord, (err, result) => {
+                if (err) {
+                    return console.error(err.message);
+                }
+                else {
+                    let name = req.body.astroname;
+                    res.send(name + " has been successfully added!");
+                }
+            });
+        }
     });
     app.get('/astronaut/:astronautID', function(req, res) {
         // (needs error handling)
