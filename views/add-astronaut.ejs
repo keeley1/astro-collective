@@ -20,13 +20,13 @@
                 <h1><a href="/" id="app-title"><%=appName%></a></h1>
             </div>
             <div class="navbar-item-two">
-                <p><a href="astronauts" class="navbar-astro">astronauts</a></p>
+                <p><a href="/astronauts" class="navbar-astro <%= currentPage === 'astronauts' ? 'active' : '' %>">astronauts</a></p>
             </div>
             <div class="navbar-item-two">
-                <p><a href="missions" class="navbar-astro">missions</a></p>
+                <p><a href="/missions" class="navbar-astro">missions</a></p>
             </div>
             <div class="navbar-item-two">
-                <p><a href="spacecraft" class="navbar-astro">spacecraft</a></p>
+                <p><a href="/spacecraft" class="navbar-astro">spacecraft</a></p>
             </div>
             <div class="navbar-item-two">
                 <p><a href="about" class="navbar-astro">about</a></p>
@@ -34,7 +34,7 @@
         </div>
     </div>
 
-    <p><a href="/astronauts" class="single-astro-back"><</a></p>
+    <p><a href="/astronauts" class="single-data-back"><</a></p>
 
     <div class="centered-form-content">
         <h2>Add astronaut</h2>

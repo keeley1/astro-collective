@@ -18,10 +18,10 @@ GRANT ALL PRIVILEGES ON astroCollective.* TO 'astroappuser'@'localhost';
 DROP TABLE IF EXISTS user_details;
 CREATE TABLE user_details (
   user_id INT NOT NULL UNIQUE AUTO_INCREMENT,
-  firstname VARCHAR(20) NOT NULL,
-  surname VARCHAR(20) NOT NULL,
+  firstname VARCHAR(60) NOT NULL,
+  surname VARCHAR(60) NOT NULL,
   username VARCHAR(15) NOT NULL UNIQUE,
-  email VARCHAR(60) NOT NULL,
+  email VARCHAR(100) NOT NULL,
   hashedPassword VARCHAR(60) NOT NULL,
   PRIMARY KEY(user_id)
 );
@@ -29,7 +29,7 @@ CREATE TABLE user_details (
 DROP TABLE IF EXISTS astronauts;
 CREATE TABLE astronauts (
   astronaut_id INT NOT NULL UNIQUE AUTO_INCREMENT,
-  astronaut_name VARCHAR(60) NOT NULL,
+  astronaut_name VARCHAR(150) NOT NULL,
   astronaut_photo VARCHAR(500),
   date_of_birth DATE,
   date_of_death DATE,
@@ -37,4 +37,18 @@ CREATE TABLE astronauts (
   hours_in_space DECIMAL(6, 1),
   astronaut_profile VARCHAR(5000),
   PRIMARY KEY(astronaut_id)
+);
+
+DROP TABLE IF EXISTS missions;
+CREATE TABLE missions (
+  mission_id INT NOT NULL UNIQUE AUTO_INCREMENT,
+  mission_name VARCHAR(200),
+  launch_date DATE,
+  return_date DATE,
+  launch_location VARCHAR(100),
+  space_agency VARCHAR(100),
+  spacecraft VARCHAR(100),
+  mission_insignia VARCHAR(500),
+  mission_details VARCHAR(5000),
+  PRIMARY KEY(mission_id)
 );

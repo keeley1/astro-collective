@@ -34,32 +34,32 @@
         </div>
     </div>
 
-    <form action="/search" method="GET" class="search-form">
+    <form action="/searchastronauts" method="GET" class="search-form">
         <input id="search-box" class="search-bar" type="text" name="searchbox" placeholder="search astronauts">
         <input type="submit" value="Search" class="search-button">
     </form>
 
-    <div class="add-astro-position">
-        <p><a href="addastronaut" class="add-astro">+</a></p>
+    <div class="add-data-position">
+        <p><a href="addastronaut" class="add-data">+</a></p>
     </div>
 
     <% if (allAstronauts.length > 0) { %>
-        <div class="astronaut-container">
+        <div class="data-container">
             <% allAstronauts.forEach(function(astronaut) { %>
-                <div class="astronaut">
+                <div class="data">
                     <a href="astronaut/<%= astronaut.astronaut_id %>">
-                        <h3 class="astronaut-title"><%= astronaut.astronaut_name %></h3>
+                        <h3 class="data-title"><%= astronaut.astronaut_name %></h3>
                         <img src="<%= astronaut.astronaut_photo %>" alt="<%= astronaut.astronaut_name %>" class="astronaut-photo">
-                        <div class="astronaut-text-style">
-                            <p class="astronaut-data"><%= astronaut.country %></p>
-                            <p class="astronaut-data"><%= astronaut.hours_in_space %> hours in space</p>
+                        <div class="data-text-style">
+                            <p class="extra-data"><%= astronaut.country %></p>
+                            <p class="extra-data"><%= astronaut.hours_in_space %> hours in space</p>
                         </div>
                     </a>
                 </div>
             <% }); %>
         </div>
     <% } else { %>
-        <p class="astronaut-unavailable">No astronauts available.</p>
+        <p class="data-unavailable">No astronauts available.</p>
     <% } %>
 
 </body>

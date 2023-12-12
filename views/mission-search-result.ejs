@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>missions</title>
-    <link rel="stylesheet"  type="text/css" href="main.css" />
+    <title>search missions</title>
+    <link rel="stylesheet" type="text/css" href="main.css" />
 </head>
 <body>
     <% if (appState === 'loggedin') { %>
@@ -13,7 +13,7 @@
     <% } else { %>
         <p><a href="register" id="sign-up">sign up</a></p>
     <% } %>
-
+    
     <div class="navbar">
         <div class="navbar-container">
             <div class="navbar-item-one">
@@ -39,13 +39,11 @@
         <input type="submit" value="Search" class="search-button">
     </form>
 
-    <div class="add-data-position">
-        <p><a href="addmission" class="add-data">+</a></p>
-    </div>
+    <p><a href="/missions" class="search-data-back"><</a></p>
 
-    <% if (allMissions.length > 0) { %>
+    <% if (searchResult.length > 0) { %>
         <div class="data-container">
-            <% allMissions.forEach(function(mission) { %>
+            <% searchResult.forEach(function(mission) { %>
                 <div class="data">
                     <a href="mission/<%= mission.mission_id %>">
                         <h3 class="data-title"><%= mission.mission_name %></h3>
@@ -59,7 +57,8 @@
             <% }); %>
         </div>
     <% } else { %>
-        <p class="data-unavailable">No missions available.</p>
+        <p class="data-unavailable">No matching missions</p>
     <% } %>
+
 </body>
 </html>

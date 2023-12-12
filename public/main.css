@@ -128,7 +128,7 @@ html {
     text-decoration: underline;
 }
 
-/* astronaut pages */
+/* astronaut, mission pages */
 .astro-list {
     list-style: none;
 }
@@ -137,19 +137,19 @@ html {
     color: rgb(102, 102, 102);
 }
 
-.astronaut-container {
+.data-container {
     display: flex;
     flex-wrap: wrap; 
     justify-content: center;
     margin-top: -15px;
 }
 
-.astronaut-container a {
+.data-container a {
     text-decoration: none; 
     color: inherit; 
 }
 
-.astronaut {
+.data {
     transition: 0.4s ease;
     flex: 0 0 25%;
     margin: 1%;
@@ -160,31 +160,35 @@ html {
     text-align: center;
 }
 
-.astronaut:hover {
+.data:hover {
     color: white;
     background-color: rgba(139, 168, 201, 0.3);
 }
 
-.astronaut-title {
+.data-title {
     font-weight: 600;
 }
 
 .astronaut-photo {
-    width:  200px;
+    width: 200px;
     height: 250px;
     object-fit: cover;
 }
 
-.astronaut-text-style {
+.mission-photo {
+    height: 250px;
+}
+
+.data-text-style {
     font-weight: 200;
 }
 
-.add-astro-position {
+.add-data-position {
     display: flex;
     flex-direction: row-reverse;
 }
 
-.add-astro {
+.add-data {
     transition: 0.4s ease;
     text-decoration: none;
     background-color: rgba(139, 168, 201, 0.3);
@@ -195,7 +199,7 @@ html {
     padding: 5px 12px 5px 12px;
 }
 
-.add-astro:hover {
+.add-data:hover {
     color: white;
     border-radius: 5px;
 }
@@ -206,15 +210,15 @@ html {
     white-space: pre-wrap;
 }
 
-/* single astronaut page */
-.single-astronaut-container {
+/* single astronaut, mission page */
+.single-data-container {
     margin: 30px;
     padding: 20px;
     background-color: rgba(93, 112, 136, 0.3);
     color: white;
 }
 
-.single-astro-back {
+.single-data-back {
     transition: 0.4s ease;
     text-decoration: none;
     background-color: rgba(139, 168, 201, 0.3);
@@ -225,21 +229,21 @@ html {
     margin-left: 20px;
 }
 
-.single-astro-back:hover {
+.single-data-back:hover {
     color: white;
     border-radius: 5px;
 }
 
-.single-astro-flex-container {
+.single-data-flex-container {
     display: flex;
     flex-direction: row;
 }
 
-.single-astro-flex-two {
+.single-data-flex-two {
     margin-left: 20px;
 }
 
-.single-astronaut-title {
+.single-data-title {
     font-size: 30px;
 }
 
@@ -275,7 +279,7 @@ html {
     color: black;
 }
 
-.search-astro-back {
+.search-data-back {
     transition: 0.4s ease;
     text-decoration: none;
     background-color: rgba(139, 168, 201, 0.3);
@@ -286,12 +290,12 @@ html {
     margin-left: 40px;
 }
 
-.search-astro-back:hover {
+.search-data-back:hover {
     color: white;
     border-radius: 5px;
 }
 
-.astronaut-unavailable {
+.data-unavailable {
     color: white;
     margin-top: 180px;
     text-align: center;
