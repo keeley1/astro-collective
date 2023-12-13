@@ -443,6 +443,33 @@ module.exports = function(app, appData) {
             }
         });
     });
+    app.get('/searchrockets', function(req, res) {
+        console.log('search = '+ req.query.searchbox);
+        if (req.query.searchbox.trim() === "") {
+            res.redirect('/rockets');
+        }
+        else {
+            let sqlquery = "SELECT * FROM rockets WHERE rocket_name LIKE ?";
+            let newrecord = [`%${req.query.searchbox}%`];
+
+            db.query(sqlquery, newrecord, (err, result) => {
+                if (err) {
+                    res.redirect('./');
+                }
+
+                let rocketData = Object.assign({}, appData, { searchResult: result }, { currentPage: "rockets" });
+                console.log(rocketData);
+
+                if (req.session.userId) {
+                    let appData2 = Object.assign({}, rocketData, { appState: "loggedin" });
+                    res.render('rocket-search-result.ejs', appData2);
+                } else {
+                    let appData2 = Object.assign({}, rocketData, { appState: "notloggedin" });
+                    res.render('rocket-search-result.ejs', appData2);
+                }
+            });
+        }
+    });
     app.get('/about', function(req, res) {
         let craftData = Object.assign({}, appData, { currentPage: "about" });
 

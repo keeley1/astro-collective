@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>rockets</title>
-    <link rel="stylesheet"  type="text/css" href="main.css" />
+    <title>search rockets</title>
+    <link rel="stylesheet" type="text/css" href="main.css" />
 </head>
 <body>
     <% if (appState === 'loggedin') { %>
@@ -13,7 +13,7 @@
     <% } else { %>
         <p><a href="register" id="sign-up">sign up</a></p>
     <% } %>
-
+    
     <div class="navbar">
         <div class="navbar-container">
             <div class="navbar-item-one">
@@ -33,19 +33,17 @@
             </div>
         </div>
     </div>
-    
+
     <form action="/searchrockets" method="GET" class="search-form">
         <input id="search-box" class="search-bar" type="text" name="searchbox" placeholder="search rockets">
         <input type="submit" value="Search" class="search-button">
     </form>
 
-    <div class="add-data-position">
-        <p><a href="addmission" class="add-data">+</a></p>
-    </div>
+    <p><a href="/rockets" class="search-data-back"><</a></p>
 
-    <% if (allRockets.length > 0) { %>
+    <% if (searchResult.length > 0) { %>
         <div class="data-container">
-            <% allRockets.forEach(function(rocket) { %>
+            <% searchResult.forEach(function(rocket) { %>
                 <div class="data">
                     <a href="rocket/<%= rocket.rocket_id %>">
                         <h3 class="data-title"><%= rocket.rocket_name %></h3>
@@ -58,7 +56,8 @@
             <% }); %>
         </div>
     <% } else { %>
-        <p class="data-unavailable">No rockets available.</p>
+        <p class="data-unavailable">No matching rockets</p>
     <% } %>
+
 </body>
 </html>
