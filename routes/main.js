@@ -131,7 +131,8 @@ module.exports = function(app, appData) {
             if (err) {
                 return res.redirect('/')
             }
-            res.send('you are now logged out! <a href=' + './' + '>Home</a>');
+            let appData2 = Object.assign({}, appData, { appState: "notloggedin" });
+            res.render('loggedout.ejs', { appData2: appData2 });
         })
     });
     app.get('/astronauts', function(req, res) {

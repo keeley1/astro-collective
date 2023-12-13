@@ -251,7 +251,7 @@ html {
     font-size: 30px;
 }
 
-/*search form*/
+/* search form */
 .search-form {
     margin-left: 40px;
     margin-top: 10px;
@@ -303,4 +303,10 @@ html {
     color: white;
     margin-top: 180px;
     text-align: center;
+}
+
+/* logged in page */
+.loggedinout-container {
+    padding-left: 40px;
+    color: rgb(192, 221, 254);
 }
