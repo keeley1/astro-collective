@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>rocket</title>
+    <title>spacecraft</title>
     <link rel="stylesheet"  type="text/css" href="/main.css" />
 </head>
 <body>
@@ -26,7 +26,7 @@
                 <p><a href="/missions" class="navbar-astro">missions</a></p>
             </div>
             <div class="navbar-item-two">
-                <p><a href="/rockets" class="navbar-astro <%= currentPage === 'rockets' ? 'active' : '' %>">rockets</a></p>
+                <p><a href="/spacecraft" class="navbar-astro <%= currentPage === 'spacecraft' ? 'active' : '' %>">spacecraft</a></p>
             </div>
             <div class="navbar-item-two">
                 <p><a href="/about" class="navbar-astro">about</a></p>
@@ -34,28 +34,28 @@
         </div>
     </div>
 
-    <p><a href="/rockets" class="single-data-back"><</a></p>
+    <p><a href="/spacecraft" class="single-data-back"><</a></p>
 
-    <% if (rocket.length > 0) { %>
+    <% if (spacecraft.length > 0) { %>
         <div class="single-data-container">
-            <% rocket.forEach(function(rocket) { %>
+            <% spacecraft.forEach(function(spacecraft) { %>
                 <div class="single-data">
                     <div class="single-data-flex-container">
                         <div class="single-data-flex-one">
-                            <img src="<%= rocket.rocket_photo %>" alt="<%= rocket.rocket_name %>" class="single-data-photo" width="300">
+                            <img src="<%= spacecraft.craft_photo %>" alt="<%= spacecraft.craft_name %>" class="single-data-photo" width="300">
                         </div>
                         <div class="single-data-flex-two">
-                            <h3 class="single-data-title"><%= rocket.rocket_name %></h3>
-                            <p class="single-data-data">Status: <%= rocket.rocket_status %></p>
-                            <p class="single-data-data">Total launches: <%= rocket.rocket_launches %></p>
+                            <h3 class="single-data-title"><%= spacecraft.craft_name %></h3>
+                            <p class="single-data-data">Status: <%= spacecraft.craft_status %></p>
+                            <p class="single-data-data">Total launches: <%= spacecraft.craft_launches %></p>
                         </div>
                     </div>
-                    <p class="single-data-data" id="single-data-profile">Rocket Profile: <%- rocket.rocket_details.replace(/\r\n/g, '<br>') %></p>    
+                    <p class="single-data-data" id="single-data-profile">Spacecraft Profile: <%- spacecraft.craft_details.replace(/\r\n/g, '<br>') %></p>    
                 </div>
              <% }); %>
         </div>
     <% } else { %>
-        <p>No rockets available.</p>
+        <p>No spacecraft available.</p>
     <% } %>
 </body>
 </html>

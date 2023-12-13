@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>rockets</title>
+    <title>spacecraft</title>
     <link rel="stylesheet"  type="text/css" href="main.css" />
 </head>
 <body>
@@ -26,7 +26,7 @@
                 <p><a href="missions" class="navbar-astro">missions</a></p>
             </div>
             <div class="navbar-item-two">
-                <p><a href="spacecraft" class="navbar-astro <%= currentPage === 'rockets' ? 'active' : '' %>">rockets</a></p>
+                <p><a href="spacecraft" class="navbar-astro <%= currentPage === 'spacecraft' ? 'active' : '' %>">spacecraft</a></p>
             </div>
             <div class="navbar-item-two">
                 <p><a href="about" class="navbar-astro">about</a></p>
@@ -34,31 +34,31 @@
         </div>
     </div>
     
-    <form action="/searchrockets" method="GET" class="search-form">
-        <input id="search-box" class="search-bar" type="text" name="searchbox" placeholder="search rockets">
+    <form action="/searchspacecraft" method="GET" class="search-form">
+        <input id="search-box" class="search-bar" type="text" name="searchbox" placeholder="search spacecraft">
         <input type="submit" value="Search" class="search-button">
     </form>
 
     <div class="add-data-position">
-        <p><a href="addmission" class="add-data">+</a></p>
+        <p><a href="addspacecraft" class="add-data">+</a></p>
     </div>
 
-    <% if (allRockets.length > 0) { %>
+    <% if (allCraft.length > 0) { %>
         <div class="data-container">
-            <% allRockets.forEach(function(rocket) { %>
+            <% allCraft.forEach(function(spacecraft) { %>
                 <div class="data">
-                    <a href="rocket/<%= rocket.rocket_id %>">
-                        <h3 class="data-title"><%= rocket.rocket_name %></h3>
-                        <img src="<%= rocket.rocket_photo %>" alt="<%= rocket.rocket_name %>" class="rocket-photo">
+                    <a href="spacecraft/<%= spacecraft.craft_id %>">
+                        <h3 class="data-title"><%= spacecraft.craft_name %></h3>
+                        <img src="<%= spacecraft.craft_photo %>" alt="<%= spacecraft.craft_name %>" class="craft-photo">
                         <div class="data-text-style">
-                            <p class="extra-data"><%= rocket.rocket_status %></p>
+                            <p class="extra-data"><%= spacecraft.craft_status %></p>
                         </div>
                     </a>
                 </div>
             <% }); %>
         </div>
     <% } else { %>
-        <p class="data-unavailable">No rockets available.</p>
+        <p class="data-unavailable">No spacecraft available.</p>
     <% } %>
 </body>
 </html>
