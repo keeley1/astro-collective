@@ -52,3 +52,14 @@ CREATE TABLE missions (
   mission_details VARCHAR(5000),
   PRIMARY KEY(mission_id)
 );
+
+DROP TABLE IF EXISTS spacecraft;
+CREATE TABLE spacecraft (
+  craft_id INT NOT NULL UNIQUE AUTO_INCREMENT,
+  craft_name VARCHAR(200),
+  craft_photo VARCHAR(500),
+  craft_status ENUM('Active', 'Retired', 'Destroyed'),
+  craft_launches INT(100),
+  craft_details VARCHAR(5000),
+  PRIMARY KEY(craft_id)
+);

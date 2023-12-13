@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>mission</title>
+    <title>spacecraft</title>
     <link rel="stylesheet"  type="text/css" href="/main.css" />
 </head>
 <body>
@@ -23,10 +23,10 @@
                 <p><a href="/astronauts" class="navbar-astro">astronauts</a></p>
             </div>
             <div class="navbar-item-two">
-                <p><a href="/missions" class="navbar-astro <%= currentPage === 'missions' ? 'active' : '' %>">missions</a></p>
+                <p><a href="/missions" class="navbar-astro">missions</a></p>
             </div>
             <div class="navbar-item-two">
-                <p><a href="/spacecraft" class="navbar-astro">spacecraft</a></p>
+                <p><a href="/spacecraft" class="navbar-astro <%= currentPage === 'spacecraft' ? 'active' : '' %>">spacecraft</a></p>
             </div>
             <div class="navbar-item-two">
                 <p><a href="/about" class="navbar-astro">about</a></p>
@@ -34,30 +34,28 @@
         </div>
     </div>
 
-    <p><a href="/missions" class="single-data-back"><</a></p>
+    <p><a href="/spacecraft" class="single-data-back"><</a></p>
 
-    <% if (mission.length > 0) { %>
+    <% if (spacecraft.length > 0) { %>
         <div class="single-data-container">
-            <% mission.forEach(function(mission) { %>
+            <% spacecraft.forEach(function(spacecraft) { %>
                 <div class="single-data">
                     <div class="single-data-flex-container">
                         <div class="single-data-flex-one">
-                            <img src="<%= mission.mission_insignia %>" alt="<%= mission.mission_name %>" class="single-data-photo" width="300">
+                            <img src="<%= spacecraft.craft_photo %>" alt="<%= spacecraft.craft_name %>" class="single-data-photo" width="300">
                         </div>
                         <div class="single-data-flex-two">
-                            <h3 class="single-data-title"><%= mission.mission_name %></h3>
-                            <p class="single-data-data">Space agency: <%= mission.space_agency %></p>
-                            <p class="single-data-data">Launch site: <%= mission.launch_location %></p>
-                            <p class="single-data-data">Spacecraft: <%= mission.spacecraft %></p>
-                            <p class="single-data-data"><%= mission.launch_date %> - <%= mission.return_date %></p>
+                            <h3 class="single-data-title"><%= spacecraft.craft_name %></h3>
+                            <p class="single-data-data">Status: <%= spacecraft.craft_status %></p>
+                            <p class="single-data-data">Total launches: <%= spacecraft.craft_launches %></p>
                         </div>
                     </div>
-                    <p class="single-data-data" id="single-data-profile">Mission Profile: <%- mission.mission_details.replace(/\r\n/g, '<br>') %></p>    
+                    <p class="single-data-data" id="single-data-profile">Spacecraft Profile: <%- spacecraft.craft_details.replace(/\r\n/g, '<br>') %></p>    
                 </div>
              <% }); %>
         </div>
     <% } else { %>
-        <p>No missions available.</p>
+        <p>No spacecraft available.</p>
     <% } %>
 </body>
 </html>

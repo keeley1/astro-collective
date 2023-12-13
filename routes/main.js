@@ -399,14 +399,111 @@ module.exports = function(app, appData) {
         }
     });
     app.get('/spacecraft', function(req, res) {
+        let sqlquery = "SELECT * FROM spacecraft";
+
+        db.query(sqlquery, (err, result) => {
+            if (err) {
+                res.redirect('./');
+            }
+
+            let craftData = Object.assign({}, appData, { allCraft: result }, { currentPage: "spacecraft" });
+            console.log(craftData);
+
+            if (req.session.userId) {
+                let appData2 = Object.assign({}, craftData, { appState: "loggedin" });
+                res.render('spacecraft.ejs', appData2);
+            } else {
+                let appData2 = Object.assign({}, craftData, { appState: "notloggedin" });
+                res.render('spacecraft.ejs', appData2);
+            }
+        });
+    });
+    app.get('/addspacecraft', redirectLogin, function(req, res) {
         let craftData = Object.assign({}, appData, { currentPage: "spacecraft" });
 
         if (req.session.userId) {
             let appData2 = Object.assign({}, craftData, { appState: "loggedin" });
-            res.render('spacecraft.ejs', appData2);
+            res.render('add-spacecraft.ejs', appData2);
         } else {
             let appData2 = Object.assign({}, craftData, { appState: "notloggedin" });
-            res.render('spacecraft.ejs', appData2);
+            res.render('add-spacecraft.ejs', appData2);
+        }
+    });
+    app.post('/addedspacecraft', 
+    [
+        check('craftname').notEmpty().isLength({ max:200 }),
+        check('craftphoto').notEmpty().isURL(),
+        check('craftlaunches').notEmpty(),
+        check('craftdetails').optional().isLength({ max:5000 })
+    ], function(req, res) {
+        const errors = validationResult(req); 
+
+        if (!errors.isEmpty()) { 
+            console.log("Validation errors:", errors.array());
+            console.log("invalid form data");
+            res.redirect('/addspacecraft'); 
+        } 
+        else {
+            let sqlquery = "INSERT INTO spacecraft (craft_name, craft_photo, craft_status, craft_launches, craft_details) VALUES (?,?,?,?,?)";
+            let newrecord = [req.body.craftname, req.body.craftphoto, req.body.craftstatus, req.body.craftlaunches, req.body.craftdetails];
+
+            db.query(sqlquery, newrecord, (err, result) => {
+                if (err) {
+                    return console.error(err.message);
+                }
+                else {
+                    let name = req.body.craftname;
+                    res.send(name + " has been successfully added!");
+                }
+            });
+        }
+    });
+    app.get('/spacecraft/:spacecraftID', function(req, res) {
+        let sqlquery = "SELECT * FROM spacecraft WHERE craft_id = ?"
+        let newrecord = [req.params.spacecraftID];
+
+        db.query(sqlquery, newrecord, (err, result) => {
+            if (err) {
+                res.redirect('./');
+            }
+
+            let craftData = Object.assign({}, appData, { spacecraft: result }, { currentPage: "spacecraft" });
+            console.log(craftData);
+
+            if (req.session.userId) {
+                let appData2 = Object.assign({}, craftData, { appState: "loggedin" });
+                res.render('single-spacecraft.ejs', appData2);
+            } else {
+                let appData2 = Object.assign({}, craftData, { appState: "notloggedin" });
+                res.render('single-spacecraft.ejs', appData2);
+            }
+        });
+    });
+    app.get('/searchspacecraft', function(req, res) {
+        console.log('search = '+ req.query.searchbox);
+        if (req.query.searchbox.trim() === "") {
+            res.redirect('/spacecraft');
+        }
+        else {
+            let sqlquery = "SELECT * FROM spacecraft WHERE craft_name LIKE ?";
+            let newrecord = [`%${req.query.searchbox}%`];
+
+            db.query(sqlquery, newrecord, (err, result) => {
+                if (err) {
+                    res.redirect('./');
+                }
+
+                let craftData = Object.assign({}, appData, { searchResult: result }, { currentPage: "spacecraft" });
+                console.log(craftData);
+
+                if (req.session.userId) {
+                    let appData2 = Object.assign({}, craftData, { appState: "loggedin" });
+                    res.render('spacecraft-search-result.ejs', appData2);
+                } else {
+                    let appData2 = Object.assign({}, craftData, { appState: "notloggedin" });
+                    res.render('spacecraft-search-result.ejs', appData2);
+                }
+            });
         }
     });
     app.get('/about', function(req, res) {
