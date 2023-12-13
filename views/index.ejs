@@ -11,7 +11,7 @@
     <% if (appState === 'loggedin') { %>
         <p><a href="logout" id="sign-up">log out</a></p>
     <% } else { %>
-        <p><a href="register" id="sign-up">sign up</a></p>
+        <p><a href="login" id="sign-up">log in</a></p>
     <% } %>
 
     <div class="navbar">
@@ -32,6 +32,13 @@
                 <p><a href="about" class="navbar-astro">about</a></p>
             </div>
         </div>
+    </div>
+
+    <div class="nasa-api-container">
+        <h2 class="nasa-api-title">NASA Photo of the Day</h2>
+        <a href="astrophoto">
+            <img src="<%= imageUrl %>" alt="<%= title %>" class="nasa-photo">
+        </a>
     </div>
 </body>
 </html>

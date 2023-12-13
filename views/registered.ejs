@@ -8,7 +8,11 @@
     <link rel="stylesheet"  type="text/css" href="main.css" />
 </head>
 <body>
-    <p><a href="register" id="sign-up">sign up</a></p>
+    <% if (appState === 'loggedin') { %>
+        <p><a href="logout" id="sign-up">log out</a></p>
+    <% } else { %>
+        <p><a href="login" id="sign-up">log in</a></p>
+    <% } %>
     
     <div class="navbar">
         <div class="navbar-container">
@@ -30,7 +34,8 @@
         </div>
     </div>
 
-    <h2>register</h2>
-    <p><%=userName%>, you have sucessfully registered!</p>
+    <div class="loggedinout-container">
+        <h3><%=userName%>, you have sucessfully registered!</h2>
+    </div>
 </body>
 </html>

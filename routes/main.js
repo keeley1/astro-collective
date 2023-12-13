@@ -6,6 +6,7 @@ module.exports = function(app, appData) {
     const mysql = require('mysql');
     const bcrypt = require('bcrypt'); 
     const formatDate = require('../script');
+    const nasaPhotoApi = require('../script');
 
     const redirectLogin = (req, res, next) => {
         if (!req.session.userId) {
@@ -18,19 +19,35 @@ module.exports = function(app, appData) {
 
     // handling routes
     app.get('/', function(req, res) {
-        if (req.session.userId) {
-            let appData2 = Object.assign({}, appData, { appState: "loggedin" });
-            res.render('index.ejs', appData2);
-        } else {
-            let appData2 = Object.assign({}, appData, { appState: "notloggedin" });
-            res.render('index.ejs', appData2);
-        }
+        const request = require('request');  
+        let apiKey = 'nA1OrKFjtPaWdPTr4wGLhNfyHptQbbiJLwGy90Kq'; 
+        let url = `https://api.nasa.gov/planetary/apod?api_key=${apiKey}` 
+        
+        request(url, function (err, response, body) { 
+            if(err){ 
+                console.log('error:', err); 
+            } 
+            else { 
+                const data = JSON.parse(body);
+                const imageUrl = data.url;
+
+                if (req.session.userId) {
+                    let appData2 = Object.assign({}, appData, { imageUrl, title: data.title, appState: "loggedin" });
+                    res.render('index.ejs', appData2);
+                } else {
+                    let appData2 = Object.assign({}, appData, { imageUrl, title: data.title, appState: "notloggedin" });
+                    res.render('index.ejs', appData2);
+                }
+            }
+        });
     });
     app.get('/register', function(req, res) {
         if (req.session.userId) {
-            res.redirect('/');
+            let appData2 = Object.assign({}, appData, { appState: "loggedin" });
+            res.redirect('/', appData2);
         } else {
-            res.render('register.ejs', appData);
+            let appData2 = Object.assign({}, appData, { appState: "notloggedin" });
+            res.render('register.ejs', appData2);
         }
     });
     app.post('/registered', 
@@ -64,7 +81,7 @@ module.exports = function(app, appData) {
                 const existingUsername = result;
                 console.log(existingUsername);
     
-                if (existingUsername.length = 0) {
+                if (existingUsername.length > 0) {
                     console.log("username already exists");
                     return res.redirect('/register');
                 }
@@ -81,7 +98,7 @@ module.exports = function(app, appData) {
                         }
                         else {
                             userName = req.body.username;
-                            res.render('registered.ejs', { userName: userName, appData: appData });
+                            res.render('registered.ejs', { userName: userName, appData: appData, appState: "loggedin" });
                         }
                     });
                 }); 
@@ -90,9 +107,11 @@ module.exports = function(app, appData) {
     });
     app.get('/login', function(req, res) {
         if (req.session.userId) {
-            res.redirect('/');
+            let appData2 = Object.assign({}, appData, { appState: "loggedin" });
+            res.redirect('/', appData2);
         } else {
-            res.render('login.ejs', appData);
+            let appData2 = Object.assign({}, appData, { appState: "notloggedin" });
+            res.render('login.ejs', appData2);
         }
     });
     app.post('/loggedin', function(req, res) {
@@ -170,7 +189,8 @@ module.exports = function(app, appData) {
     app.post('/addedastronaut', 
     [
         check('astroname').notEmpty(),
-        check('astrophoto').isURL(),
+        check('astrophoto').notEmpty().isURL(),
+        check('astrodob').notEmpty().isDate(),
         check('astrodod').optional(),
         check('astrocountry').notEmpty().isLength({ max:60 }),
         check('astrospacetime').notEmpty(),
@@ -186,7 +206,7 @@ module.exports = function(app, appData) {
         } 
         else if (dateOfDeath == '') {
             let sqlquery = "INSERT INTO astronauts (astronaut_name, astronaut_photo, date_of_birth, country, hours_in_space, astronaut_profile) VALUES (?,?,?,?,?,?)";
-            let newrecord = [req.body.astroname, req.body.astrophoto, req.body.astrodob, req.body.astrocountry, req.body.astrospacetime, req.body.astroprofile];
+            let newrecord = [req.sanitize(req.body.astroname), req.body.astrophoto, req.body.astrodob, req.sanitize(req.body.astrocountry), req.body.astrospacetime, req.sanitize(req.body.astroprofile)];
 
             db.query(sqlquery, newrecord, (err, result) => {
                 if (err) {
@@ -200,7 +220,7 @@ module.exports = function(app, appData) {
         }
         else {
             let sqlquery = "INSERT INTO astronauts (astronaut_name, astronaut_photo, date_of_birth, date_of_death, country, hours_in_space, astronaut_profile) VALUES (?,?,?,?,?,?,?)";
-            let newrecord = [req.body.astroname, req.body.astrophoto, req.body.astrodob, req.body.astrodod, req.body.astrocountry, req.body.astrospacetime, req.body.astroprofile];
+            let newrecord = [req.sanitize(req.body.astroname), req.body.astrophoto, req.body.astrodob, req.body.astrodod, req.sanitize(req.body.astrocountry), req.body.astrospacetime, req.sanitize(req.body.astroprofile)];
 
             db.query(sqlquery, newrecord, (err, result) => {
                 if (err) {
@@ -309,8 +329,8 @@ module.exports = function(app, appData) {
     [
         check('missionname').notEmpty().isLength({ max:200 }),
         check('missioninsignia').notEmpty().isURL(),
-        check('missionlaunch').notEmpty(),
-        check('missionreturn').notEmpty(),
+        check('missionlaunch').notEmpty().isDate(),
+        check('missionreturn').notEmpty().isDate(),
         check('missionlocation').notEmpty().isLength({ max:100 }),
         check('missionagency').notEmpty().isLength({ max:100 }),
         check('missioncraft').notEmpty().isLength({ max:100 }),
@@ -325,7 +345,8 @@ module.exports = function(app, appData) {
         } 
         else {
             let sqlquery = "INSERT INTO missions (mission_name, launch_date, return_date, launch_location, space_agency, spacecraft, mission_insignia, mission_details) VALUES (?,?,?,?,?,?,?,?)";
-            let newrecord = [req.body.missionname, req.body.missionlaunch, req.body.missionreturn, req.body.missionlocation, req.body.missionagency, req.body.missioncraft, req.body.missioninsignia, req.body.missiondetails];
+            let newrecord = [req.sanitize(req.body.missionname), req.body.missionlaunch, req.body.missionreturn, req.sanitize(req.body.missionlocation), req.sanitize(req.body.missionagency), req.sanitize(req.body.missioncraft), req.body.missioninsignia, req.sanitize(req.body.missiondetails)];
+            console.log(req.sanitize(req.body.missionname));
 
             db.query(sqlquery, newrecord, (err, result) => {
                 if (err) {
@@ -434,7 +455,7 @@ module.exports = function(app, appData) {
     [
         check('craftname').notEmpty().isLength({ max:200 }),
         check('craftphoto').notEmpty().isURL(),
-        check('craftlaunches').notEmpty(),
+        check('craftlaunches').notEmpty().isInt(),
         check('craftdetails').optional().isLength({ max:5000 })
     ], function(req, res) {
         const errors = validationResult(req); 
@@ -446,7 +467,7 @@ module.exports = function(app, appData) {
         } 
         else {
             let sqlquery = "INSERT INTO spacecraft (craft_name, craft_photo, craft_status, craft_launches, craft_details) VALUES (?,?,?,?,?)";
-            let newrecord = [req.body.craftname, req.body.craftphoto, req.body.craftstatus, req.body.craftlaunches, req.body.craftdetails];
+            let newrecord = [req.sanitize(req.body.craftname), req.body.craftphoto, req.body.craftstatus, req.body.craftlaunches, req.sanitize(req.body.craftdetails)];
 
             db.query(sqlquery, newrecord, (err, result) => {
                 if (err) {
@@ -517,5 +538,28 @@ module.exports = function(app, appData) {
             let appData2 = Object.assign({}, craftData, { appState: "notloggedin" });
             res.render('about.ejs', appData2);
         }
+    });
+    app.get('/astrophoto', function(req, res) {
+        const request = require('request');  
+        let apiKey = 'nA1OrKFjtPaWdPTr4wGLhNfyHptQbbiJLwGy90Kq'; 
+        let url = `https://api.nasa.gov/planetary/apod?api_key=${apiKey}` 
+        
+        request(url, function (err, response, body) { 
+            if(err){ 
+                console.log('error:', err); 
+            } 
+            else { 
+                const data = JSON.parse(body);
+                const imageUrl = data.url;
+
+                if (req.session.userId) {
+                    let appData2 = Object.assign({}, appData, { imageUrl, title: data.title, explanation: data.explanation, date: data.date, appState: "loggedin" });
+                    res.render('astrophoto.ejs', appData2);
+                } else {
+                    let appData2 = Object.assign({}, appData, { imageUrl, title: data.title, explanation: data.explanation, date: data.date, appState: "notloggedin" });
+                    res.render('astrophoto.ejs', appData2);
+                }
+            }
+        });
     });
 }

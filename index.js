@@ -6,11 +6,13 @@ const mysql = require('mysql');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 var validator = require ('express-validator');
+const expressSanitizer = require('express-sanitizer'); 
 
 const app = express();
 const port = 8000;
 
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(expressSanitizer()); 
 
 app.use(session({
     secret: 'somerandomstuff',
