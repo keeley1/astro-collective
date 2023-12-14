@@ -251,6 +251,11 @@ html {
     font-size: 30px;
 }
 
+.single-mission-crew-title {
+    padding-left: 30px;
+    color: white;
+}
+
 /* search form */
 .search-form {
     margin-left: 40px;

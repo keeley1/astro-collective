@@ -334,6 +334,7 @@ module.exports = function(app, appData) {
         check('missionlocation').notEmpty().isLength({ max:100 }),
         check('missionagency').notEmpty().isLength({ max:100 }),
         check('missioncraft').notEmpty().isLength({ max:100 }),
+        check('missioncrew').notEmpty().isInt(),
         check('missiondetails').optional().isLength({ max:5000 })
     ], function(req, res) {
         const errors = validationResult(req); 
@@ -344,8 +345,8 @@ module.exports = function(app, appData) {
             res.redirect('/addastronaut'); 
         } 
         else {
-            let sqlquery = "INSERT INTO missions (mission_name, launch_date, return_date, launch_location, space_agency, spacecraft, mission_insignia, mission_details) VALUES (?,?,?,?,?,?,?,?)";
-            let newrecord = [req.sanitize(req.body.missionname), req.body.missionlaunch, req.body.missionreturn, req.sanitize(req.body.missionlocation), req.sanitize(req.body.missionagency), req.sanitize(req.body.missioncraft), req.body.missioninsignia, req.sanitize(req.body.missiondetails)];
+            let sqlquery = "INSERT INTO missions (mission_name, launch_date, return_date, launch_location, space_agency, spacecraft, crew_size, mission_insignia, mission_details) VALUES (?,?,?,?,?,?,?,?)";
+            let newrecord = [req.sanitize(req.body.missionname), req.body.missionlaunch, req.body.missionreturn, req.sanitize(req.body.missionlocation), req.sanitize(req.body.missionagency), req.sanitize(req.body.missioncraft), req.body.missioncrew, req.body.missioninsignia, req.sanitize(req.body.missiondetails)];
             console.log(req.sanitize(req.body.missionname));
 
             db.query(sqlquery, newrecord, (err, result) => {
@@ -364,7 +365,13 @@ module.exports = function(app, appData) {
         const astroID = req.params.missionID;
 
         // sql query to select specific astronaut
-        let sqlquery = "SELECT * FROM missions WHERE mission_id = ?"
+        //let sqlquery = "SELECT * FROM missions WHERE mission_id = ?"
+        let sqlquery = `
+        SELECT missions.*, astronauts.astronaut_id, astronauts.astronaut_name, astronauts.astronaut_photo, astronauts.country, astronauts.hours_in_space
+        FROM missions
+        LEFT JOIN astronaut_missions ON missions.mission_id = astronaut_missions.mission_id
+        LEFT JOIN astronauts ON astronaut_missions.astronaut_id = astronauts.astronaut_id
+        WHERE missions.mission_id = ?`;
         let newrecord = [req.params.missionID];
 
         db.query(sqlquery, newrecord, (err, result) => {
@@ -381,8 +388,35 @@ module.exports = function(app, appData) {
                 };
             });
 
-            let missionData = Object.assign({}, appData, { mission: missionWithFormattedDates }, { currentPage: "missions" });
-            console.log(missionData);
+            console.log(missionWithFormattedDates);
+
+            // check if mission has no connected astronauts
+            if (missionWithFormattedDates.length > 1) {
+                let missionData = Object.assign({}, appData, { mission: missionWithFormattedDates }, { currentPage: "missions" }, { astronauts: "yes"});
+                
+                if (req.session.userId) {
+                    let appData2 = Object.assign({}, missionData, { appState: "loggedin" });
+                    res.render('single-mission.ejs', appData2);
+                } else {
+                    let appData2 = Object.assign({}, missionData, { appState: "notloggedin" });
+                    res.render('single-mission.ejs', appData2);
+                }
+            }
+            else {
+                let missionData = Object.assign({}, appData, { mission: missionWithFormattedDates }, { currentPage: "missions" }, { astronauts: "no"});
+                console.log(missionData.astronauts);
+
+                if (req.session.userId) {
+                    let appData2 = Object.assign({}, missionData, { appState: "loggedin" });
+                    res.render('single-mission.ejs', appData2);
+                } else {
+                    let appData2 = Object.assign({}, missionData, { appState: "notloggedin" });
+                    res.render('single-mission.ejs', appData2);
+                }
+            }
+
+            /*let missionData = Object.assign({}, appData, { mission: missionWithFormattedDates }, { currentPage: "missions" });
+            //console.log(missionData);
 
             if (req.session.userId) {
                 let appData2 = Object.assign({}, missionData, { appState: "loggedin" });
@@ -390,7 +424,7 @@ module.exports = function(app, appData) {
             } else {
                 let appData2 = Object.assign({}, missionData, { appState: "notloggedin" });
                 res.render('single-mission.ejs', appData2);
-            }
+            }*/
         });
     });
     app.get('/searchmissions', function(req, res) {

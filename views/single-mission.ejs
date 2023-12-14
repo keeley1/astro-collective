@@ -36,28 +36,53 @@
 
     <p><a href="/missions" class="single-data-back"><</a></p>
 
-    <% if (mission.length > 0) { %>
+    <% if (mission.length > 0 && mission[0]) { %>
         <div class="single-data-container">
-            <% mission.forEach(function(mission) { %>
-                <div class="single-data">
-                    <div class="single-data-flex-container">
-                        <div class="single-data-flex-one">
-                            <img src="<%= mission.mission_insignia %>" alt="<%= mission.mission_name %>" class="single-data-photo" width="300">
-                        </div>
-                        <div class="single-data-flex-two">
-                            <h3 class="single-data-title"><%= mission.mission_name %></h3>
-                            <p class="single-data-data">Space agency: <%= mission.space_agency %></p>
-                            <p class="single-data-data">Launch site: <%= mission.launch_location %></p>
-                            <p class="single-data-data">Spacecraft: <%= mission.spacecraft %></p>
-                            <p class="single-data-data"><%= mission.launch_date %> - <%= mission.return_date %></p>
-                        </div>
+            <div class="single-data">
+                <div class="single-data-flex-container">
+                    <div class="single-data-flex-one">
+                        <% if (mission[0].mission_insignia) { %>
+                            <img src="<%= mission[0].mission_insignia %>" alt="<%= mission[0].mission_name %>" class="single-data-photo" width="300">
+                        <% } %>
                     </div>
-                    <p class="single-data-data" id="single-data-profile">Mission Profile: <%- mission.mission_details.replace(/\r\n/g, '<br>') %></p>    
+                    <div class="single-data-flex-two">
+                        <h3 class="single-data-title"><%= mission[0].mission_name %></h3>
+                        <p class="single-data-data">Space agency: <%= mission[0].space_agency %></p>
+                        <p class="single-data-data">Launch site: <%= mission[0].launch_location %></p>
+                        <p class="single-data-data">Spacecraft: <%= mission[0].spacecraft %></p>
+                        <p class="single-data-data">Crew size: <%= mission[0].crew_size %></p>
+                        <p class="single-data-data"><%= mission[0].launch_date %> - <%= mission[0].return_date %></p>
+                    </div>
                 </div>
-             <% }); %>
+                <% if (mission[0].mission_details) { %>
+                    <p class="single-data-data" id="single-data-profile">Mission Profile: <%- mission[0].mission_details.replace(/\r\n/g, '<br>') %></p>
+                <% } %>  
+            </div>
         </div>
     <% } else { %>
         <p>No missions available.</p>
+    <% } %>
+
+    <% if (astronauts == 'yes') { %>
+        <h2 class="single-mission-crew-title">Crew members:</h2>
+        <% if (mission.length > 0) { %>
+            <div class="data-container">
+                <% mission.forEach(function(mission) { %>
+                    <div class="data">
+                        <a href="/astronaut/<%= mission.astronaut_id %>">
+                            <h3 class="data-title"><%= mission.astronaut_name %></h3>
+                            <img src="<%= mission.astronaut_photo %>" alt="<%= mission.astronaut_name %>" class="mission-photo">
+                            <div class="data-text-style">
+                                <p class="extra-data"><%= mission.country %></p>
+                                <p class="extra-data"><%= mission.hours_in_space %></p>
+                            </div>
+                        </a>
+                    </div>
+                <% }); %>
+            </div>
+        <% } else { %>
+            <p class="data-unavailable">No astronauts available.</p>
+        <% } %>
     <% } %>
 </body>
 </html>

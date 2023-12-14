@@ -5,8 +5,8 @@
  *           Any existing data will be lost!
  */
 
-# Make sure the databese is created before you run this script
-#     
+# Make sure the database is created before you run this script 
+DROP DATABASE IF EXISTS astroCollective;
 CREATE DATABASE astroCollective;
 
 USE astroCollective;
@@ -48,6 +48,7 @@ CREATE TABLE missions (
   launch_location VARCHAR(100),
   space_agency VARCHAR(100),
   spacecraft VARCHAR(100),
+  crew_size INT(20),
   mission_insignia VARCHAR(500),
   mission_details VARCHAR(5000),
   PRIMARY KEY(mission_id)
@@ -62,4 +63,14 @@ CREATE TABLE spacecraft (
   craft_launches INT(100),
   craft_details VARCHAR(5000),
   PRIMARY KEY(craft_id)
+);
+
+DROP TABLE IF EXISTS astronaut_missions;
+CREATE TABLE astronaut_missions (
+  astronaut_mission_id INT NOT NULL UNIQUE AUTO_INCREMENT,
+  astronaut_id INT,
+  mission_id INT,
+  PRIMARY KEY(astronaut_mission_id),
+  FOREIGN KEY (astronaut_id) REFERENCES astronauts(astronaut_id),
+  FOREIGN KEY (mission_id) REFERENCES missions(mission_id)
 );
