@@ -36,34 +36,53 @@
 
     <p><a href="/astronauts" class="single-data-back"><</a></p>
     
-    <% if (astronaut.length > 0) { %>
+    <% if (astronaut.length > 0 && astronaut[0]) { %>
         <div class="single-data-container">
-            <% astronaut.forEach(function(astronaut) { %>
-                <div class="single-data">
-                    <div class="single-data-flex-container">
-                        <div class="single-data-flex-one">
-                            <img src="<%= astronaut.astronaut_photo %>" alt="<%= astronaut.astronaut_name %>" class="single-data-photo" width="300">
-                        </div>
-                        <div class="single-data-flex-two">
-                            <h3 class="single-data-title"><%= astronaut.astronaut_name %></h3>
-
-                            <% if (astronaut.date_of_death === 'N/A' || astronaut.date_of_death === null) { %>
-                                <p class="single-data-data"><%= astronaut.date_of_birth %></p>
-                            <% } else { %>
-                                <p class="single-data-data"><%= astronaut.date_of_birth %> - <%= astronaut.date_of_death %></p>
-                            <% } %>
-
-                            <p class="single-data-data">Country: <%= astronaut.country %></p>
-                            <p class="single-data-data">Hours in Space: <%= astronaut.hours_in_space %></p>
-                        </div>
+            <div class="single-data">
+                <div class="single-data-flex-container">
+                    <div class="single-data-flex-one">
+                        <img src="<%= astronaut[0].astronaut_photo %>" alt="<%= astronaut[0].astronaut_name %>" class="single-data-photo" width="300">
                     </div>
-                    <p class="single-data-data" id="single-data-profile">Astronaut Profile: <%- astronaut.astronaut_profile.replace(/\r\n/g, '<br>') %></p>    
+                    <div class="single-data-flex-two">
+                        <h3 class="single-data-title"><%= astronaut[0].astronaut_name %></h3>
+                        <% if (astronaut[0].date_of_death === 'N/A' || astronaut[0].date_of_death === null) { %>
+                            <p class="single-data-data"><%= astronaut[0].date_of_birth %></p>
+                        <% } else { %>
+                            <p class="single-data-data"><%= astronaut[0].date_of_birth %> - <%= astronaut[0].date_of_death %></p>
+                        <% } %>
+
+                        <p class="single-data-data">Country: <%= astronaut[0].country %></p>
+                        <p class="single-data-data">Hours in Space: <%= astronaut[0].hours_in_space %></p>
+                    </div>
                 </div>
-             <% }); %>
+                <p class="single-data-data-title">Astronaut Information:</p>
+                <p class="single-data-data" id="single-data-profile"><%- astronaut[0].astronaut_profile.replace(/\r\n/g, '<br>') %></p>    
+            </div>
         </div>
     <% } else { %>
         <p>No astronauts available.</p>
     <% } %>
 
+    <% if (missions === 'yes') { %>
+        <h2 class="single-mission-crew-title">Missions:</h2>
+        <% if (astronaut.length > 0) { %>
+            <div class="data-container">
+                <% astronaut.forEach(function(astronaut) { %>
+                    <div class="data">
+                        <a href="/mission/<%= astronaut.mission_id %>">
+                            <h3 class="data-title"><%= astronaut.mission_name %></h3>
+                            <img src="<%= astronaut.mission_insignia %>" alt="<%= astronaut.mission_name %>" class="mission-photo">
+                            <div class="data-text-style">
+                                <p class="extra-data"><%= astronaut.space_agency %></p>
+                                <p class="extra-data"><%= astronaut.launch_location %></p>
+                            </div>
+                        </a>
+                    </div>
+                <% }); %>
+            </div>
+        <% } else { %>
+            <p class="data-unavailable">No missions available.</p>
+        <% } %>
+    <% } %>
 </body>
 </html>

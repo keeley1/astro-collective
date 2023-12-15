@@ -37,9 +37,9 @@
     <p><a href="/mission/<%= missionID %>" class="single-data-back"><</a></p>
 
     <div class="centered-form-content">
-        <h2>Add astronaut to crew</h2>
+        <h2>Add Astronaut to Mission</h2>
         <form method="POST" action="/addedcrew" class="form-details">
-            <label for="astronautID">Select Astronaut:</label><br>
+            <label for="astronautID">Select astronaut:</label><br>
             <select name="astronautID" id="astronautID" class="form-data">
               <% astronauts.forEach(function(astronaut) { %>
                 <option value="<%= astronaut.astronaut_id %>"><%= astronaut.astronaut_name %></option>

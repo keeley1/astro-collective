@@ -213,8 +213,7 @@ module.exports = function(app, appData) {
                     return console.error(err.message);
                 }
                 else {
-                    let name = req.body.astroname;
-                    res.send(name + " has been successfully added!");
+                    res.redirect('/astronauts');
                 }
             });
         }
@@ -227,19 +226,23 @@ module.exports = function(app, appData) {
                     return console.error(err.message);
                 }
                 else {
-                    let name = req.body.astroname;
-                    res.send(name + " has been successfully added!");
+                    res.redirect('/astronauts');
                 }
             });
         }
     });
     app.get('/astronaut/:astronautID', function(req, res) {
-        // (needs error handling)
-        const astroID = req.params.astronautID;
-
-        // sql query to select specific astronaut
-        let sqlquery = "SELECT * FROM astronauts WHERE astronaut_id = ?"
+        
+        let sqlquery = 
+        `SELECT astronauts.*, missions.mission_id, missions.mission_name, missions.mission_insignia, missions.space_agency, missions.launch_location
+        FROM astronauts
+        LEFT JOIN astronaut_missions ON astronauts.astronaut_id = astronaut_missions.astronaut_id
+        LEFT JOIN missions ON astronaut_missions.mission_id = missions.mission_id
+        WHERE astronauts.astronaut_id = ?`;
         let newrecord = [req.params.astronautID];
+        // sql query to select specific astronaut
+        //let sqlquery = "SELECT * FROM astronauts WHERE astronaut_id = ?"
+        //let newrecord = [req.params.astronautID];
 
         db.query(sqlquery, newrecord, (err, result) => {
             if (err) {
@@ -255,6 +258,30 @@ module.exports = function(app, appData) {
                 };
             });
 
+            // check if astronaut has no connected missions
+            if (astronautWithFormattedDates[0].mission_id == null) {
+                let astronautData = Object.assign({}, appData, { astronaut: astronautWithFormattedDates }, { currentPage: "astronauts" }, { missions: "no" });
+
+                if (req.session.userId) {
+                    let appData2 = Object.assign({}, astronautData, { appState: "loggedin" });
+                    res.render('single-astronaut.ejs', appData2);
+                } else {
+                    let appData2 = Object.assign({}, astronautData, { appState: "notloggedin" });
+                    res.render('single-astronaut.ejs', appData2);
+                }
+            }
+            else {
+                let astronautData = Object.assign({}, appData, { astronaut: astronautWithFormattedDates }, { currentPage: "astronauts" }, { missions: "yes" });
+
+                if (req.session.userId) {
+                    let appData2 = Object.assign({}, astronautData, { appState: "loggedin" });
+                    res.render('single-astronaut.ejs', appData2);
+                } else {
+                    let appData2 = Object.assign({}, astronautData, { appState: "notloggedin" });
+                    res.render('single-astronaut.ejs', appData2);
+                }
+            }
+            /*
             let astronautData = Object.assign({}, appData, { astronaut: astronautWithFormattedDates }, { currentPage: "astronauts" });
             console.log(astronautData);
 
@@ -264,7 +291,7 @@ module.exports = function(app, appData) {
             } else {
                 let appData2 = Object.assign({}, astronautData, { appState: "notloggedin" });
                 res.render('single-astronaut.ejs', appData2);
-            }
+            }*/
         });
     });
     app.get('/searchastronauts', function(req, res) {
@@ -345,7 +372,7 @@ module.exports = function(app, appData) {
             res.redirect('/addastronaut'); 
         } 
         else {
-            let sqlquery = "INSERT INTO missions (mission_name, launch_date, return_date, launch_location, space_agency, spacecraft, crew_size, mission_insignia, mission_details) VALUES (?,?,?,?,?,?,?,?)";
+            let sqlquery = "INSERT INTO missions (mission_name, launch_date, return_date, launch_location, space_agency, spacecraft, crew_size, mission_insignia, mission_details) VALUES (?,?,?,?,?,?,?,?,?)";
             let newrecord = [req.sanitize(req.body.missionname), req.body.missionlaunch, req.body.missionreturn, req.sanitize(req.body.missionlocation), req.sanitize(req.body.missionagency), req.sanitize(req.body.missioncraft), req.body.missioncrew, req.body.missioninsignia, req.sanitize(req.body.missiondetails)];
             console.log(req.sanitize(req.body.missionname));
 
@@ -354,8 +381,7 @@ module.exports = function(app, appData) {
                     return console.error(err.message);
                 }
                 else {
-                    let name = req.body.missionname;
-                    res.send(name + " has been successfully added!");
+                    res.redirect('/missions');
                 }
             });
         }
@@ -535,8 +561,7 @@ module.exports = function(app, appData) {
                     return console.error(err.message);
                 }
                 else {
-                    let name = req.body.craftname;
-                    res.send(name + " has been successfully added!");
+                    res.redirect('/spacecraft');
                 }
             });
         }

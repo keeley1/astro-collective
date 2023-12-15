@@ -61,7 +61,8 @@
                     </div>
                 </div>
                 <% if (mission[0].mission_details) { %>
-                    <p class="single-data-data" id="single-data-profile">Mission Profile: <%- mission[0].mission_details.replace(/\r\n/g, '<br>') %></p>
+                    <p class="single-data-data-title">Mission Information:</p>
+                    <p class="single-data-data" id="single-data-profile"><%- mission[0].mission_details.replace(/\r\n/g, '<br>') %></p>
                 <% } %>  
             </div>
         </div>
@@ -80,7 +81,7 @@
                             <img src="<%= mission.astronaut_photo %>" alt="<%= mission.astronaut_name %>" class="mission-photo">
                             <div class="data-text-style">
                                 <p class="extra-data"><%= mission.country %></p>
-                                <p class="extra-data"><%= mission.hours_in_space %></p>
+                                <p class="extra-data"><%= mission.hours_in_space %> hours in space</p>
                             </div>
                         </a>
                     </div>
