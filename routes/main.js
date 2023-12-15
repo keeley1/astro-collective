@@ -281,17 +281,6 @@ module.exports = function(app, appData) {
                     res.render('single-astronaut.ejs', appData2);
                 }
             }
-            /*
-            let astronautData = Object.assign({}, appData, { astronaut: astronautWithFormattedDates }, { currentPage: "astronauts" });
-            console.log(astronautData);
-
-            if (req.session.userId) {
-                let appData2 = Object.assign({}, astronautData, { appState: "loggedin" });
-                res.render('single-astronaut.ejs', appData2);
-            } else {
-                let appData2 = Object.assign({}, astronautData, { appState: "notloggedin" });
-                res.render('single-astronaut.ejs', appData2);
-            }*/
         });
     });
     app.get('/searchastronauts', function(req, res) {
@@ -567,24 +556,40 @@ module.exports = function(app, appData) {
         }
     });
     app.get('/spacecraft/:spacecraftID', function(req, res) {
-        let sqlquery = "SELECT * FROM spacecraft WHERE craft_id = ?"
-        let newrecord = [req.params.spacecraftID];
 
-        db.query(sqlquery, newrecord, (err, result) => {
-            if (err) {
+        let craftQuery = "SELECT * FROM spacecraft WHERE craft_id = ?"
+        let craftRecord = [req.params.spacecraftID];
+
+        db.query(craftQuery, craftRecord, (craftErr, craftResult) => {
+            if (craftErr) {
                 res.redirect('./');
             }
 
-            let craftData = Object.assign({}, appData, { spacecraft: result }, { currentPage: "spacecraft" });
-            console.log(craftData);
+            let missionQuery = 
+            `SELECT *
+            FROM missions
+            WHERE spacecraft = (
+                SELECT craft_name
+                FROM spacecraft
+                WHERE craft_id = ?)`;
+            let missionRecord = [craftResult[0].craft_id];
 
-            if (req.session.userId) {
-                let appData2 = Object.assign({}, craftData, { appState: "loggedin" });
-                res.render('single-spacecraft.ejs', appData2);
-            } else {
-                let appData2 = Object.assign({}, craftData, { appState: "notloggedin" });
-                res.render('single-spacecraft.ejs', appData2);
-            }
+            db.query(missionQuery, missionRecord, (missionErr, missionResult) => {
+                if (missionErr) {
+                    res.redirect('./');
+                }
+                
+                let craftData = Object.assign({}, appData, { spacecraft: craftResult }, {mission: missionResult }, { currentPage: "spacecraft" });
+                console.log(craftData);
+                
+                if (req.session.userId) {
+                    let appData2 = Object.assign({}, craftData, { appState: "loggedin" });
+                    res.render('single-spacecraft.ejs', appData2);
+                } else {
+                    let appData2 = Object.assign({}, craftData, { appState: "notloggedin" });
+                    res.render('single-spacecraft.ejs', appData2);
+                }
+            });
         });
     });
     app.get('/searchspacecraft', function(req, res) {

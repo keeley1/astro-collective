@@ -58,5 +58,24 @@
     <% } else { %>
         <p>No spacecraft available.</p>
     <% } %>
+    
+    <% if (mission.length > 0) { %>
+        <h2 class="single-mission-crew-title">Missions:</h2>
+        <div class="data-container">
+            <% mission.forEach(function(mission) { %>
+                <div class="data">
+                    <a href="/mission/<%= mission.mission_id %>">
+                        <h3 class="data-title"><%= mission.mission_name %></h3>
+                        <img src="<%= mission.mission_insignia %>" alt="<%= mission.mission_name %>" class="mission-photo">
+                        <div class="data-text-style">
+                            <p class="extra-data"><%= mission.space_agency %></p>
+                            <p class="extra-data"><%= mission.launch_location %></p>
+                        </div>
+                    </a>
+                </div>
+            <% }); %>
+        </div>
+    <% } %>
+    
 </body>
 </html>
