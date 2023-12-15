@@ -251,6 +251,27 @@ html {
     font-size: 30px;
 }
 
+.add-crew-position {
+    display: flex;
+    flex-direction: row-reverse;
+    margin-right: 30px;
+    margin-top: -60px;
+}
+
+.add-crew {
+    transition: 0.4s ease;
+    color: rgb(192, 221, 254);
+    background-color: rgba(139, 168, 201, 0.3);
+    text-decoration: none;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.add-crew:hover {
+    color: white;
+    border-radius: 20px;
+}
+
 .single-mission-crew-title {
     padding-left: 30px;
     color: white;

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Crew to Mission</title>
+    <link rel="stylesheet"  type="text/css" href="/main.css" />
+</head>
+<body>
+    <% if (appState === 'loggedin') { %>
+        <p><a href="logout" id="sign-up">log out</a></p>
+    <% } else { %>
+        <p><a href="login" id="sign-up">log in</a></p>
+    <% } %>
+    
+    <div class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-item-one">
+                <h1><a href="/" id="app-title"><%=appName%></a></h1>
+            </div>
+            <div class="navbar-item-two">
+                <p><a href="/astronauts" class="navbar-astro">astronauts</a></p>
+            </div>
+            <div class="navbar-item-two">
+                <p><a href="/missions" class="navbar-astro <%= currentPage === 'missions' ? 'active' : '' %>">missions</a></p>
+            </div>
+            <div class="navbar-item-two">
+                <p><a href="/spacecraft" class="navbar-astro">spacecraft</a></p>
+            </div>
+            <div class="navbar-item-two">
+                <p><a href="/about" class="navbar-astro">about</a></p>
+            </div>
+        </div>
+    </div>
+
+    <p><a href="/mission/<%= missionID %>" class="single-data-back"><</a></p>
+
+    <div class="centered-form-content">
+        <h2>Add astronaut to crew</h2>
+        <form method="POST" action="/addedcrew" class="form-details">
+            <label for="astronautID">Select Astronaut:</label><br>
+            <select name="astronautID" id="astronautID" class="form-data">
+              <% astronauts.forEach(function(astronaut) { %>
+                <option value="<%= astronaut.astronaut_id %>"><%= astronaut.astronaut_name %></option>
+              <% }); %>
+            </select><br>
+            <input type="hidden" name="missionID" value="<%= missionID %>">
+            <input type="submit" value="submit" class="form-button"/>
+        </form>
+    </div>
+</body>
+</html>

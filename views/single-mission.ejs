@@ -36,6 +36,12 @@
 
     <p><a href="/missions" class="single-data-back"><</a></p>
 
+    <% if (completeCrew === 'no') { %>
+        <div class="add-crew-position">
+            <p><a href="/addcrew/<%= mission[0].mission_id %>" class="add-crew">add crew</a></p>
+        </div>
+    <% } %>
+
     <% if (mission.length > 0 && mission[0]) { %>
         <div class="single-data-container">
             <div class="single-data">
@@ -63,7 +69,7 @@
         <p>No missions available.</p>
     <% } %>
 
-    <% if (astronauts == 'yes') { %>
+    <% if (astronauts === 'yes') { %>
         <h2 class="single-mission-crew-title">Crew members:</h2>
         <% if (mission.length > 0) { %>
             <div class="data-container">
