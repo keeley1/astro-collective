@@ -675,12 +675,11 @@ module.exports = function(app, appData) {
             }
         });
     });
-    app.get('/api', function (req,res) { 
-        const keyword = req.query.keyword;
+    app.get('/astronautapi', function (req,res) { 
+        const keyword = req.sanitize(req.query.keyword);
         let sqlquery = "SELECT * FROM astronauts";  
 
         if (keyword) {
-            // If a keyword is provided, modify the query to include a WHERE clause
             sqlquery += " WHERE astronaut_name LIKE ?";
         }
         
@@ -691,4 +690,34 @@ module.exports = function(app, appData) {
             res.json(result);  
         }); 
     }); 
+    app.get('/missionapi', function (req,res) { 
+        const keyword = req.sanitize(req.query.keyword);
+        let sqlquery = "SELECT * FROM missions";  
+
+        if (keyword) {
+            sqlquery += " WHERE mission_name LIKE ?";
+        }
+        
+        db.query(sqlquery, [keyword ? `%${keyword}%` : null], (err, result) => { 
+            if (err) { 
+                res.redirect('./'); 
+            } 
+            res.json(result);  
+        }); 
+    }); 
+    app.get('/spacecraftapi', function (req,res) { 
+        const keyword = req.sanitize(req.query.keyword);
+        let sqlquery = "SELECT * FROM spacecraft";  
+
+        if (keyword) {
+            sqlquery += " WHERE craft_name LIKE ?";
+        }
+        
+        db.query(sqlquery, [keyword ? `%${keyword}%` : null], (err, result) => { 
+            if (err) { 
+                res.redirect('./'); 
+            } 
+            res.json(result);  
+        }); 
+    });
 }
