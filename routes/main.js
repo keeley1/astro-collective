@@ -9,7 +9,7 @@ module.exports = function(app, appData) {
 
     const redirectLogin = (req, res, next) => {
         if (!req.session.userId) {
-            res.redirect('../login')
+            res.redirect('/login')
         }
         else {
             next();
@@ -103,7 +103,7 @@ module.exports = function(app, appData) {
                         }
                         else {
                             let userName = req.body.username;
-                            res.render('registered.ejs', { userName: userName, appData: appData, appState: "loggedin", error: "none" });
+                            res.render('registered.ejs', { userName: userName, appData: appData, appState: "loggedout", error: "none" });
                         }
                     });
                 }); 
@@ -132,7 +132,7 @@ module.exports = function(app, appData) {
             else {
                 if (result.length === 0) {
                     // redirect to log in if there is no matching user
-                    res.redirect('/login');
+                    res.redirect('login');
                 } else {
                     const hashedPassword = result[0].hashedPassword; 
     
@@ -215,7 +215,7 @@ module.exports = function(app, appData) {
         if (!errors.isEmpty()) { 
             console.log("Validation errors:", errors.array());
             // if data is invalid redirect to add astronaut page
-            res.redirect('/addastronaut'); 
+            res.redirect('addastronaut'); 
         } 
         // check if a date of death has been provided
         else if (dateOfDeath == '') {
@@ -229,7 +229,7 @@ module.exports = function(app, appData) {
                 }
                 else {
                     // redirect to astronaut page upon successful insertion
-                    res.redirect('/astronauts');
+                    res.redirect('astronauts');
                 }
             });
         }
@@ -244,7 +244,7 @@ module.exports = function(app, appData) {
                 }
                 else {
                     // redirect to astronaut page upon successful insertion
-                    res.redirect('/astronauts');
+                    res.redirect('astronauts');
                 }
             });
         }
@@ -297,7 +297,7 @@ module.exports = function(app, appData) {
     app.get('/searchastronauts', function(req, res) {
         // redirect empty search to astronaut page
         if (req.query.searchbox.trim() === "") {
-            res.redirect('/astronauts');
+            res.redirect('astronauts');
         }
         else {
             // query to select astronauts by name
@@ -373,7 +373,7 @@ module.exports = function(app, appData) {
         if (!errors.isEmpty()) { 
             // log errors and redirect to add astronaut page
             console.log("Validation errors:", errors.array());
-            res.redirect('/addmission'); 
+            res.redirect('addmission'); 
         } 
         else {
             // query to insert mission data, sanitised to avoid SQL injection attacks
@@ -386,7 +386,7 @@ module.exports = function(app, appData) {
                 }
                 else {
                     // redirect to mission page upon successful insertion
-                    res.redirect('/missions');
+                    res.redirect('missions');
                 }
             });
         }
@@ -446,7 +446,7 @@ module.exports = function(app, appData) {
     app.get('/searchmissions', function(req, res) {
         // redirect to missions for empty search
         if (req.query.searchbox.trim() === "") {
-            res.redirect('/missions');
+            res.redirect('missions');
         }
         else {
             // query to select missions by name
@@ -505,7 +505,7 @@ module.exports = function(app, appData) {
             }
             else {
                 // upon successful insertion, direct user to the mission they have added crew to
-                res.redirect(`/mission/${req.body.missionID}`);
+                res.redirect(`mission/${req.body.missionID}`);
             }
         });
     });
@@ -555,7 +555,7 @@ module.exports = function(app, appData) {
         if (!errors.isEmpty()) { 
             // log errors and redirect to add spacecraft page
             console.log("Validation errors:", errors.array());
-            res.redirect('/addspacecraft'); 
+            res.redirect('addspacecraft'); 
         } 
         else {
             // query to insert data into spacecraft table, sanitised for SQL injection attack avoidance
@@ -568,7 +568,7 @@ module.exports = function(app, appData) {
                 }
                 else {
                     // upon successful insertion, direct user to spacecraft page
-                    res.redirect('/spacecraft');
+                    res.redirect('spacecraft');
                 }
             });
         }
@@ -614,7 +614,7 @@ module.exports = function(app, appData) {
     app.get('/searchspacecraft', function(req, res) {
         // redirect to spacecraft page if search is empty
         if (req.query.searchbox.trim() === "") {
-            res.redirect('/spacecraft');
+            res.redirect('spacecraft');
         }
         else {
             // query to select spacecraft by name
