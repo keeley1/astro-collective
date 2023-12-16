@@ -56,5 +56,9 @@
 
         <p>Already have an account? <a href="login" class="below-form-button">log in</a></p>
     </div>
+
+    <% if (error === 'existing user') { %>
+        <p>User exists</p>
+    <% } %>
 </body>
 </html>

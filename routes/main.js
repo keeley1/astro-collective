@@ -6,7 +6,6 @@ module.exports = function(app, appData) {
     const mysql = require('mysql');
     const bcrypt = require('bcrypt'); 
     const formatDate = require('../script');
-    const nasaPhotoApi = require('../script');
 
     const redirectLogin = (req, res, next) => {
         if (!req.session.userId) {
@@ -19,6 +18,7 @@ module.exports = function(app, appData) {
 
     // handling routes
     app.get('/', function(req, res) {
+        // making astronomy photo api available on home page
         const request = require('request');  
         let apiKey = 'nA1OrKFjtPaWdPTr4wGLhNfyHptQbbiJLwGy90Kq'; 
         let url = `https://api.nasa.gov/planetary/apod?api_key=${apiKey}` 
@@ -28,9 +28,11 @@ module.exports = function(app, appData) {
                 console.log('error:', err); 
             } 
             else { 
+                // parse and send api data to index.ejs
                 const data = JSON.parse(body);
                 const imageUrl = data.url;
 
+                // check if user is logged in and save this information
                 if (req.session.userId) {
                     let appData2 = Object.assign({}, appData, { imageUrl, title: data.title, appState: "loggedin" });
                     res.render('index.ejs', appData2);
@@ -44,14 +46,16 @@ module.exports = function(app, appData) {
     app.get('/register', function(req, res) {
         if (req.session.userId) {
             let appData2 = Object.assign({}, appData, { appState: "loggedin" });
+            // redirect to home if user is already logged in
             res.redirect('/', appData2);
         } else {
-            let appData2 = Object.assign({}, appData, { appState: "notloggedin" });
+            let appData2 = Object.assign({}, appData, { appState: "notloggedin", error: "none"});
             res.render('register.ejs', appData2);
         }
     });
     app.post('/registered', 
     [
+    // validate each field against specific criteria
     check('first').matches(/^[a-zA-Z]+$/),
     check('last').matches(/^[a-zA-Z]+$/),
     check('email').isEmail(),
@@ -61,8 +65,8 @@ module.exports = function(app, appData) {
         const errors = validationResult(req); 
 
         if (!errors.isEmpty()) { 
+            // log any validation errors and redirect to register page
             console.log("Validation errors:", errors.array());
-            console.log("invalid form data");
             res.redirect('/register'); 
         } 
         else {
@@ -79,13 +83,14 @@ module.exports = function(app, appData) {
                 }
     
                 const existingUsername = result;
-                console.log(existingUsername);
     
+                // redirect user if username exists
                 if (existingUsername.length > 0) {
-                    console.log("username already exists");
-                    return res.redirect('/register');
+                    // return error to user
+                    return res.send("Username already exists");
                 }
-                
+
+                // hash password and insert user details into database
                 bcrypt.hash(plainPassword, saltRounds, function(err, hashedPassword) { 
                     let sqlquery = "INSERT INTO user_details (username, firstname, surname, email, hashedPassword) VALUES (?,?,?,?,?)";
             
@@ -97,8 +102,8 @@ module.exports = function(app, appData) {
                             return console.error(err.message);
                         }
                         else {
-                            userName = req.body.username;
-                            res.render('registered.ejs', { userName: userName, appData: appData, appState: "loggedin" });
+                            let userName = req.body.username;
+                            res.render('registered.ejs', { userName: userName, appData: appData, appState: "loggedin", error: "none" });
                         }
                     });
                 }); 
@@ -108,6 +113,7 @@ module.exports = function(app, appData) {
     app.get('/login', function(req, res) {
         if (req.session.userId) {
             let appData2 = Object.assign({}, appData, { appState: "loggedin" });
+            // redirect to home if user is already logged in
             res.redirect('/', appData2);
         } else {
             let appData2 = Object.assign({}, appData, { appState: "notloggedin" });
@@ -115,6 +121,7 @@ module.exports = function(app, appData) {
         }
     });
     app.post('/loggedin', function(req, res) {
+        // query to select the hashed password via the username
         let sqlquery = "SELECT hashedPassword FROM user_details WHERE username = ?";
         let newrecord = [req.body.username];
 
@@ -124,17 +131,19 @@ module.exports = function(app, appData) {
             }
             else {
                 if (result.length === 0) {
-                    res.send('User not found');
+                    // redirect to log in if there is no matching user
+                    res.redirect('/login');
                 } else {
                     const hashedPassword = result[0].hashedPassword; 
     
                     bcrypt.compare(req.body.password, hashedPassword, function (err, result) {
                         if (err) {
-                            res.send('Cannot find user');
+                            // return error to user
+                            res.send("Cannot find user");
                         } else if (result === true) {
                             // save user session here, when login is successful 
                             req.session.userId = req.body.username; 
-                            userName = req.body.username;
+                            let userName = req.body.username;
                             res.render('loggedin.ejs', { userName: userName, appData: appData, appState: "loggedin" });
                             
                         } else {
@@ -146,6 +155,7 @@ module.exports = function(app, appData) {
         });
     });
     app.get('/logout' , function(req, res) {
+        // destroy session to log out
         req.session.destroy(err => {
             if (err) {
                 return res.redirect('/')
@@ -163,9 +173,10 @@ module.exports = function(app, appData) {
                 res.redirect('./');
             }
 
+            // update data
             let astronautData = Object.assign({}, appData, { allAstronauts: result }, { currentPage: "astronauts" });
-            console.log(astronautData);
 
+            // check if user is logged in and send correct data
             if (req.session.userId) {
                 let appData2 = Object.assign({}, astronautData, { appState: "loggedin" });
                 res.render('astronauts.ejs', appData2);
@@ -176,6 +187,7 @@ module.exports = function(app, appData) {
         });
     });
     app.get('/addastronaut', redirectLogin, function(req, res) {
+        // update and send correct data to user
         let astronautData = Object.assign({}, appData, { currentPage: "astronauts" });
 
         if (req.session.userId) {
@@ -188,6 +200,7 @@ module.exports = function(app, appData) {
     });
     app.post('/addedastronaut', 
     [
+        // validate if provided data is valid
         check('astroname').notEmpty(),
         check('astrophoto').notEmpty().isURL(),
         check('astrodob').notEmpty().isDate(),
@@ -201,10 +214,12 @@ module.exports = function(app, appData) {
 
         if (!errors.isEmpty()) { 
             console.log("Validation errors:", errors.array());
-            console.log("invalid form data");
+            // if data is invalid redirect to add astronaut page
             res.redirect('/addastronaut'); 
         } 
+        // check if a date of death has been provided
         else if (dateOfDeath == '') {
+            // query to insert data without date of death
             let sqlquery = "INSERT INTO astronauts (astronaut_name, astronaut_photo, date_of_birth, country, hours_in_space, astronaut_profile) VALUES (?,?,?,?,?,?)";
             let newrecord = [req.sanitize(req.body.astroname), req.body.astrophoto, req.body.astrodob, req.sanitize(req.body.astrocountry), req.body.astrospacetime, req.sanitize(req.body.astroprofile)];
 
@@ -213,11 +228,13 @@ module.exports = function(app, appData) {
                     return console.error(err.message);
                 }
                 else {
+                    // redirect to astronaut page upon successful insertion
                     res.redirect('/astronauts');
                 }
             });
         }
         else {
+            // query to insert new astronaut with date of death
             let sqlquery = "INSERT INTO astronauts (astronaut_name, astronaut_photo, date_of_birth, date_of_death, country, hours_in_space, astronaut_profile) VALUES (?,?,?,?,?,?,?)";
             let newrecord = [req.sanitize(req.body.astroname), req.body.astrophoto, req.body.astrodob, req.body.astrodod, req.sanitize(req.body.astrocountry), req.body.astrospacetime, req.sanitize(req.body.astroprofile)];
 
@@ -226,23 +243,16 @@ module.exports = function(app, appData) {
                     return console.error(err.message);
                 }
                 else {
+                    // redirect to astronaut page upon successful insertion
                     res.redirect('/astronauts');
                 }
             });
         }
     });
     app.get('/astronaut/:astronautID', function(req, res) {
-        
-        let sqlquery = 
-        `SELECT astronauts.*, missions.mission_id, missions.mission_name, missions.mission_insignia, missions.space_agency, missions.launch_location
-        FROM astronauts
-        LEFT JOIN astronaut_missions ON astronauts.astronaut_id = astronaut_missions.astronaut_id
-        LEFT JOIN missions ON astronaut_missions.mission_id = missions.mission_id
-        WHERE astronauts.astronaut_id = ?`;
+        // query to select single astronaut by id
+        let sqlquery = 'SELECT * FROM single_astronaut_view WHERE astronaut_id = ?';
         let newrecord = [req.params.astronautID];
-        // sql query to select specific astronaut
-        //let sqlquery = "SELECT * FROM astronauts WHERE astronaut_id = ?"
-        //let newrecord = [req.params.astronautID];
 
         db.query(sqlquery, newrecord, (err, result) => {
             if (err) {
@@ -258,7 +268,7 @@ module.exports = function(app, appData) {
                 };
             });
 
-            // check if astronaut has no connected missions
+            // check if astronaut has no connected missions and send relevant data
             if (astronautWithFormattedDates[0].mission_id == null) {
                 let astronautData = Object.assign({}, appData, { astronaut: astronautWithFormattedDates }, { currentPage: "astronauts" }, { missions: "no" });
 
@@ -271,6 +281,7 @@ module.exports = function(app, appData) {
                 }
             }
             else {
+                // send data including that the astronaut has connected missions
                 let astronautData = Object.assign({}, appData, { astronaut: astronautWithFormattedDates }, { currentPage: "astronauts" }, { missions: "yes" });
 
                 if (req.session.userId) {
@@ -284,21 +295,22 @@ module.exports = function(app, appData) {
         });
     });
     app.get('/searchastronauts', function(req, res) {
-        console.log('search = '+ req.query.searchbox);
+        // redirect empty search to astronaut page
         if (req.query.searchbox.trim() === "") {
             res.redirect('/astronauts');
         }
         else {
+            // query to select astronauts by name
             let sqlquery = "SELECT * FROM astronauts WHERE astronaut_name LIKE ?";
-            let newrecord = [`%${req.query.searchbox}%`];
+            let newrecord = [`%${req.sanitize(req.query.searchbox)}%`];
 
             db.query(sqlquery, newrecord, (err, result) => {
                 if (err) {
                     res.redirect('./');
                 }
 
+                // send relevant data to the search result page
                 let astronautData = Object.assign({}, appData, { searchResult: result }, { currentPage: "astronauts" });
-                console.log(astronautData);
 
                 if (req.session.userId) {
                     let appData2 = Object.assign({}, astronautData, { appState: "loggedin" });
@@ -311,6 +323,7 @@ module.exports = function(app, appData) {
         }
     });
     app.get('/missions', function(req, res) {
+        // query to display all missions
         let sqlquery = "SELECT * FROM missions";
 
         db.query(sqlquery, (err, result) => {
@@ -318,8 +331,8 @@ module.exports = function(app, appData) {
                 res.redirect('./');
             }
 
+            // send relevant data to the mission page
             let missionData = Object.assign({}, appData, { allMissions: result }, { currentPage: "missions" });
-            console.log(missionData);
 
             if (req.session.userId) {
                 let appData2 = Object.assign({}, missionData, { appState: "loggedin" });
@@ -331,6 +344,7 @@ module.exports = function(app, appData) {
         });
     });
     app.get('/addmission', redirectLogin, function(req, res) {
+        // send data to the add mission page and display
         let missionData = Object.assign({}, appData, { currentPage: "missions" });
 
         if (req.session.userId) {
@@ -343,6 +357,7 @@ module.exports = function(app, appData) {
     });
     app.post('/addedmission', 
     [
+        // validate add mission data
         check('missionname').notEmpty().isLength({ max:200 }),
         check('missioninsignia').notEmpty().isURL(),
         check('missionlaunch').notEmpty().isDate(),
@@ -356,34 +371,29 @@ module.exports = function(app, appData) {
         const errors = validationResult(req); 
 
         if (!errors.isEmpty()) { 
+            // log errors and redirect to add astronaut page
             console.log("Validation errors:", errors.array());
-            console.log("invalid form data");
-            res.redirect('/addastronaut'); 
+            res.redirect('/addmission'); 
         } 
         else {
+            // query to insert mission data, sanitised to avoid SQL injection attacks
             let sqlquery = "INSERT INTO missions (mission_name, launch_date, return_date, launch_location, space_agency, spacecraft, crew_size, mission_insignia, mission_details) VALUES (?,?,?,?,?,?,?,?,?)";
             let newrecord = [req.sanitize(req.body.missionname), req.body.missionlaunch, req.body.missionreturn, req.sanitize(req.body.missionlocation), req.sanitize(req.body.missionagency), req.sanitize(req.body.missioncraft), req.body.missioncrew, req.body.missioninsignia, req.sanitize(req.body.missiondetails)];
-            console.log(req.sanitize(req.body.missionname));
 
             db.query(sqlquery, newrecord, (err, result) => {
                 if (err) {
                     return console.error(err.message);
                 }
                 else {
+                    // redirect to mission page upon successful insertion
                     res.redirect('/missions');
                 }
             });
         }
     });
     app.get('/mission/:missionID', function(req, res) {
-
-        // sql query to select missions and any connected astronauts
-        let sqlquery = 
-        `SELECT missions.*, astronauts.astronaut_id, astronauts.astronaut_name, astronauts.astronaut_photo, astronauts.country, astronauts.hours_in_space
-        FROM missions
-        LEFT JOIN astronaut_missions ON missions.mission_id = astronaut_missions.mission_id
-        LEFT JOIN astronauts ON astronaut_missions.astronaut_id = astronauts.astronaut_id
-        WHERE missions.mission_id = ?`;
+        // query to select individual mission using views
+        let sqlquery = "SELECT * FROM single_mission_view WHERE mission_id = ?";
         let newrecord = [req.params.missionID];
 
         db.query(sqlquery, newrecord, (err, result) => {
@@ -414,8 +424,7 @@ module.exports = function(app, appData) {
             }
             else {
                 let missionData;
-
-                // check if crew is complete 
+                // check if crew is complete and send relevant data
                 if (missionWithFormattedDates.length == missionWithFormattedDates[0].crew_size) {
                     missionData = Object.assign({}, appData, { mission: missionWithFormattedDates }, { currentPage: "missions" }, { astronauts: "yes"}, {completeCrew: "yes"});
                 }
@@ -423,6 +432,7 @@ module.exports = function(app, appData) {
                     missionData = Object.assign({}, appData, { mission: missionWithFormattedDates }, { currentPage: "missions" }, { astronauts: "yes"}, {completeCrew: "no"});
                 }
 
+                // check if user is logged in
                 if (req.session.userId) {
                     let appData2 = Object.assign({}, missionData, { appState: "loggedin" });
                     res.render('single-mission.ejs', appData2);
@@ -434,21 +444,22 @@ module.exports = function(app, appData) {
         });
     });
     app.get('/searchmissions', function(req, res) {
-        console.log('search = '+ req.query.searchbox);
+        // redirect to missions for empty search
         if (req.query.searchbox.trim() === "") {
             res.redirect('/missions');
         }
         else {
+            // query to select missions by name
             let sqlquery = "SELECT * FROM missions WHERE mission_name LIKE ?";
-            let newrecord = [`%${req.query.searchbox}%`];
+            let newrecord = [`%${req.sanitize(req.query.searchbox)}%`];
 
             db.query(sqlquery, newrecord, (err, result) => {
                 if (err) {
                     res.redirect('./');
                 }
 
+                // send relevant data and search result
                 let missionData = Object.assign({}, appData, { searchResult: result }, { currentPage: "missions" });
-                console.log(missionData);
 
                 if (req.session.userId) {
                     let appData2 = Object.assign({}, missionData, { appState: "loggedin" });
@@ -461,6 +472,7 @@ module.exports = function(app, appData) {
         }
     });
     app.get('/addcrew/:missionID', redirectLogin, function(req, res) {
+        // query to select astronaut names for user to select from
         let sqlquery = "SELECT astronaut_id, astronaut_name FROM astronauts"
         let newrecord = [req.params.missionID];
 
@@ -469,6 +481,7 @@ module.exports = function(app, appData) {
                 res.redirect('./');
             }
 
+            // send data to add crew page
             let astronautData = Object.assign({}, appData, { astronauts: result }, { currentPage: "missions" }, { missionID: newrecord });
             console.log(newrecord);
 
@@ -482,8 +495,7 @@ module.exports = function(app, appData) {
         });
     });
     app.post('/addedcrew', function(req, res) {
-        console.log(req.body.missionID);
-        console.log(req.body.astronautID);
+        // query to insert data into astronaut mission junction table
         let sqlquery = "INSERT INTO astronaut_missions (astronaut_id, mission_id) VALUES (?,?)";
         let newrecord = [req.body.astronautID, req.body.missionID];
 
@@ -492,11 +504,13 @@ module.exports = function(app, appData) {
                 return console.error(err.message);
             }
             else {
+                // upon successful insertion, direct user to the mission they have added crew to
                 res.redirect(`/mission/${req.body.missionID}`);
             }
         });
     });
     app.get('/spacecraft', function(req, res) {
+        // query to select all spacecraft
         let sqlquery = "SELECT * FROM spacecraft";
 
         db.query(sqlquery, (err, result) => {
@@ -504,8 +518,8 @@ module.exports = function(app, appData) {
                 res.redirect('./');
             }
 
+            // send relevant data to spacecraft page
             let craftData = Object.assign({}, appData, { allCraft: result }, { currentPage: "spacecraft" });
-            console.log(craftData);
 
             if (req.session.userId) {
                 let appData2 = Object.assign({}, craftData, { appState: "loggedin" });
@@ -517,6 +531,7 @@ module.exports = function(app, appData) {
         });
     });
     app.get('/addspacecraft', redirectLogin, function(req, res) {
+        // send relevant data to add spacecraft page
         let craftData = Object.assign({}, appData, { currentPage: "spacecraft" });
 
         if (req.session.userId) {
@@ -529,6 +544,7 @@ module.exports = function(app, appData) {
     });
     app.post('/addedspacecraft', 
     [
+        // validate add spacecraft form against criteria
         check('craftname').notEmpty().isLength({ max:200 }),
         check('craftphoto').notEmpty().isURL(),
         check('craftlaunches').notEmpty().isInt(),
@@ -537,11 +553,12 @@ module.exports = function(app, appData) {
         const errors = validationResult(req); 
 
         if (!errors.isEmpty()) { 
+            // log errors and redirect to add spacecraft page
             console.log("Validation errors:", errors.array());
-            console.log("invalid form data");
             res.redirect('/addspacecraft'); 
         } 
         else {
+            // query to insert data into spacecraft table, sanitised for SQL injection attack avoidance
             let sqlquery = "INSERT INTO spacecraft (craft_name, craft_photo, craft_status, craft_launches, craft_details) VALUES (?,?,?,?,?)";
             let newrecord = [req.sanitize(req.body.craftname), req.body.craftphoto, req.body.craftstatus, req.body.craftlaunches, req.sanitize(req.body.craftdetails)];
 
@@ -550,21 +567,23 @@ module.exports = function(app, appData) {
                     return console.error(err.message);
                 }
                 else {
+                    // upon successful insertion, direct user to spacecraft page
                     res.redirect('/spacecraft');
                 }
             });
         }
     });
     app.get('/spacecraft/:spacecraftID', function(req, res) {
-
+        // query to select individual spacecraft by id
         let craftQuery = "SELECT * FROM spacecraft WHERE craft_id = ?"
-        let craftRecord = [req.params.spacecraftID];
+        let craftRecord = [req.sanitize(req.params.spacecraftID)];
 
         db.query(craftQuery, craftRecord, (craftErr, craftResult) => {
             if (craftErr) {
                 res.redirect('./');
             }
 
+            // second query to find missions that used this spacecraft, selected by name
             let missionQuery = 
             `SELECT *
             FROM missions
@@ -579,8 +598,8 @@ module.exports = function(app, appData) {
                     res.redirect('./');
                 }
                 
+                // send data to single spacecraft page
                 let craftData = Object.assign({}, appData, { spacecraft: craftResult }, {mission: missionResult }, { currentPage: "spacecraft" });
-                console.log(craftData);
                 
                 if (req.session.userId) {
                     let appData2 = Object.assign({}, craftData, { appState: "loggedin" });
@@ -593,21 +612,22 @@ module.exports = function(app, appData) {
         });
     });
     app.get('/searchspacecraft', function(req, res) {
-        console.log('search = '+ req.query.searchbox);
+        // redirect to spacecraft page if search is empty
         if (req.query.searchbox.trim() === "") {
             res.redirect('/spacecraft');
         }
         else {
+            // query to select spacecraft by name
             let sqlquery = "SELECT * FROM spacecraft WHERE craft_name LIKE ?";
-            let newrecord = [`%${req.query.searchbox}%`];
+            let newrecord = [`%${req.sanitize(req.query.searchbox)}%`];
 
             db.query(sqlquery, newrecord, (err, result) => {
                 if (err) {
                     res.redirect('./');
                 }
 
+                // send data to search result page
                 let craftData = Object.assign({}, appData, { searchResult: result }, { currentPage: "spacecraft" });
-                console.log(craftData);
 
                 if (req.session.userId) {
                     let appData2 = Object.assign({}, craftData, { appState: "loggedin" });
@@ -620,6 +640,7 @@ module.exports = function(app, appData) {
         }
     });
     app.get('/about', function(req, res) {
+        // send data to about page
         let craftData = Object.assign({}, appData, { currentPage: "about" });
 
         if (req.session.userId) {
@@ -631,6 +652,7 @@ module.exports = function(app, appData) {
         }
     });
     app.get('/astrophoto', function(req, res) {
+        // api key and url for fetching nasa astronomy photo data
         const request = require('request');  
         let apiKey = 'nA1OrKFjtPaWdPTr4wGLhNfyHptQbbiJLwGy90Kq'; 
         let url = `https://api.nasa.gov/planetary/apod?api_key=${apiKey}` 
@@ -638,11 +660,15 @@ module.exports = function(app, appData) {
         request(url, function (err, response, body) { 
             if(err){ 
                 console.log('error:', err); 
+                // redirect to home if there is error fetching data
+                res.redirect('/');
             } 
             else { 
+                // parse and save json data
                 const data = JSON.parse(body);
                 const imageUrl = data.url;
 
+                // send data to astrophoto page to be displayed
                 if (req.session.userId) {
                     let appData2 = Object.assign({}, appData, { imageUrl, title: data.title, explanation: data.explanation, date: data.date, appState: "loggedin" });
                     res.render('astrophoto.ejs', appData2);
@@ -654,17 +680,22 @@ module.exports = function(app, appData) {
         });
     });
     app.get('/peopleinspace', function(req, res) {
+        // api url, no key required as it is open
         const request = require('request');  
-        let url = 'http://api.open-notify.org/astros.json' 
+        let url = 'http://api.open-notify.org/astros.json'; 
         
         request(url, function (err, response, body) { 
             if(err){ 
                 console.log('error:', err); 
+                // redirect to home if there is error fetching data
+                res.redirect('/');
             } 
             else { 
+                // parse api data
                 const data = JSON.parse(body);
                 const numberInSpace = data.number;
 
+                // send data to people in space page
                 if (req.session.userId) {
                     let appData2 = Object.assign({}, appData, { numberInSpace, people: data.people, appState: "loggedin" });
                     res.render('people-in-space.ejs', appData2);
@@ -677,12 +708,15 @@ module.exports = function(app, appData) {
     });
     app.get('/astronautapi', function (req,res) { 
         const keyword = req.sanitize(req.query.keyword);
+        // query to select all astronauts
         let sqlquery = "SELECT * FROM astronauts";  
 
+        // if keyword is available query to search by name
         if (keyword) {
             sqlquery += " WHERE astronaut_name LIKE ?";
         }
         
+        // execute query and send result in json format
         db.query(sqlquery, [keyword ? `%${keyword}%` : null], (err, result) => { 
             if (err) { 
                 res.redirect('./'); 
@@ -692,12 +726,15 @@ module.exports = function(app, appData) {
     }); 
     app.get('/missionapi', function (req,res) { 
         const keyword = req.sanitize(req.query.keyword);
+        // query to select all missions
         let sqlquery = "SELECT * FROM missions";  
 
+        // if keyword is available query to search by name
         if (keyword) {
-            sqlquery += " WHERE mission_name LIKE ?";
+            sqlquery += "WHERE mission_name LIKE ?";
         }
         
+        // execute query and send result in json format
         db.query(sqlquery, [keyword ? `%${keyword}%` : null], (err, result) => { 
             if (err) { 
                 res.redirect('./'); 
@@ -707,12 +744,15 @@ module.exports = function(app, appData) {
     }); 
     app.get('/spacecraftapi', function (req,res) { 
         const keyword = req.sanitize(req.query.keyword);
+        // query to select all missions
         let sqlquery = "SELECT * FROM spacecraft";  
 
+        // if keyword is available query to search by name
         if (keyword) {
-            sqlquery += " WHERE craft_name LIKE ?";
+            sqlquery += "WHERE craft_name LIKE ?";
         }
         
+        // execute query and send result in json format
         db.query(sqlquery, [keyword ? `%${keyword}%` : null], (err, result) => { 
             if (err) { 
                 res.redirect('./'); 
