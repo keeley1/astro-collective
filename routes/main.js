@@ -67,7 +67,7 @@ module.exports = function(app, appData) {
         if (!errors.isEmpty()) { 
             // log any validation errors and redirect to register page
             console.log("Validation errors:", errors.array());
-            res.redirect('/register'); 
+            res.redirect('register'); 
         } 
         else {
             const saltRounds = 10; 
