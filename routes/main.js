@@ -653,4 +653,42 @@ module.exports = function(app, appData) {
             }
         });
     });
+    app.get('/peopleinspace', function(req, res) {
+        const request = require('request');  
+        let url = 'http://api.open-notify.org/astros.json' 
+        
+        request(url, function (err, response, body) { 
+            if(err){ 
+                console.log('error:', err); 
+            } 
+            else { 
+                const data = JSON.parse(body);
+                const numberInSpace = data.number;
+
+                if (req.session.userId) {
+                    let appData2 = Object.assign({}, appData, { numberInSpace, people: data.people, appState: "loggedin" });
+                    res.render('people-in-space.ejs', appData2);
+                } else {
+                    let appData2 = Object.assign({}, appData, { numberInSpace, people: data.people, appState: "notloggedin" });
+                    res.render('people-in-space', appData2);
+                }
+            }
+        });
+    });
+    app.get('/api', function (req,res) { 
+        const keyword = req.query.keyword;
+        let sqlquery = "SELECT * FROM astronauts";  
+
+        if (keyword) {
+            // If a keyword is provided, modify the query to include a WHERE clause
+            sqlquery += " WHERE astronaut_name LIKE ?";
+        }
+        
+        db.query(sqlquery, [keyword ? `%${keyword}%` : null], (err, result) => { 
+            if (err) { 
+                res.redirect('./'); 
+            } 
+            res.json(result);  
+        }); 
+    }); 
 }

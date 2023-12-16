@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About astro collective</title>
+    <title>People in Space</title>
     <link rel="stylesheet"  type="text/css" href="main.css" />
 </head>
 <body>
@@ -29,9 +29,26 @@
                 <p><a href="spacecraft" class="navbar-astro">spacecraft</a></p>
             </div>
             <div class="navbar-item-two">
-                <p><a href="spacecraft" class="navbar-astro <%= currentPage === 'about' ? 'active' : '' %>">about</a></p>
+                <p><a href="about" class="navbar-astro">about</a></p>
             </div>
         </div>
+    </div>
+
+    <p><a href="/" class="single-data-back"><</a></p>
+    
+    <h3 class="number-in-space">There are currently <%= numberInSpace %> people in space:</h3>
+
+    <div class="data-container">
+        <% people.forEach(function(people) { %>
+            <div class="data">
+                <a href="https://www.google.com/search?q=<%= encodeURIComponent(people.name) %>" target="_blank">
+                    <h3 class="data-title"><%= people.name %></h3>
+                    <div class="data-text-style">
+                        <p class="extra-data"><%= people.craft %></p>
+                    </div>
+                </a>
+            </div>
+        <% }); %>
     </div>
 </body>
 </html>

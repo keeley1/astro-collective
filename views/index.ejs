@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>astro collective home</title>
+    <title>astro collective Home</title>
     <link rel="stylesheet"  type="text/css" href="main.css" />
 </head>
 <body>
@@ -17,7 +17,7 @@
     <div class="navbar">
         <div class="navbar-container">
             <div class="navbar-item-one">
-                <h1><a href="/" id="app-title"><%=appName%></a></h1>
+                <h1><a href="/" id="app-title"><%= appName %></a></h1>
             </div>
             <div class="navbar-item-two">
                 <p><a href="astronauts" class="navbar-astro">astronauts</a></p>
@@ -34,11 +34,32 @@
         </div>
     </div>
 
-    <div class="nasa-api-container">
-        <h3 class="nasa-api-title">NASA Photo of the Day</h2>
-        <a href="astrophoto">
-            <img src="<%= imageUrl %>" alt="<%= title %>" class="nasa-photo">
-        </a>
+    <div class="intro-container">
+        <p class="intro-text">astro collective catalogues astronauts, missions, and spacecraft for your enjoyment. If you are passionate about space exploration and would like to contribute to our database, create an account or log in.</p>
     </div>
+
+    <div class="home-flex">
+        <div class="nasa-api-container">
+            <h3 class="nasa-api-title">NASA Photo of the Day</h2>
+            <a href="astrophoto">
+                <img src="<%= imageUrl %>" alt="<%= title %>" class="nasa-photo">
+            </a>
+        </div>
+        <div class="home-flex-two">
+            <div class="quote-container">
+                <p class="quote-text-quote">"When you look at the stars and the galaxy, you feel that you are not just from any particular piece of land, but from the solar system."</p>
+                <p class="quote-text-author"><i>- Kalpana Chawla</i></p>
+            </div>
+            <a href="peopleinspace" class="people-in-space-a">
+                <div class="people-in-space-container">
+                    <p class="people-in-space">Who is in space right now?</p>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <footer>
+        <p><a href="astrophoto">NASA Astronomy Photo of the Day</a></p>
+    </footer>
 </body>
 </html>
