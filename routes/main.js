@@ -9,7 +9,7 @@ module.exports = function(app, appData) {
 
     const redirectLogin = (req, res, next) => {
         if (!req.session.userId) {
-            res.redirect('/login')
+            res.redirect('login')
         }
         else {
             next();
@@ -154,7 +154,7 @@ module.exports = function(app, appData) {
             }
         });
     });
-    app.get('/logout' , function(req, res) {
+    app.get('/logout', function(req, res) {
         // destroy session to log out
         req.session.destroy(err => {
             if (err) {
@@ -713,7 +713,7 @@ module.exports = function(app, appData) {
 
         // if keyword is available query to search by name
         if (keyword) {
-            sqlquery += " WHERE astronaut_name LIKE ?";
+            sqlquery += "WHERE astronaut_name LIKE ?";
         }
         
         // execute query and send result in json format
