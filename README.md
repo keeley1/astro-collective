@@ -1,6 +1,6 @@
 # astro collective
 
-app information here
+astro collective catalogues astronauts, missions, and spacecraft, allowing users to search for and create new records in the database. Astro collective uses the NASA Astronomy Photo of the Day API and the Number of People in Space open API. 
 
 ## Set Up Instructions
 To set up this project locally, first clone the repository onto your machine.
