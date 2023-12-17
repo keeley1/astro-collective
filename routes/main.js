@@ -713,7 +713,7 @@ module.exports = function(app, appData) {
 
         // if keyword is available query to search by name
         if (keyword) {
-            sqlquery += "WHERE astronaut_name LIKE ?";
+            sqlquery += " WHERE astronaut_name LIKE ?";
         }
         
         // execute query and send result in json format
@@ -731,7 +731,7 @@ module.exports = function(app, appData) {
 
         // if keyword is available query to search by name
         if (keyword) {
-            sqlquery += "WHERE mission_name LIKE ?";
+            sqlquery += " WHERE mission_name LIKE ?";
         }
         
         // execute query and send result in json format
@@ -749,7 +749,7 @@ module.exports = function(app, appData) {
 
         // if keyword is available query to search by name
         if (keyword) {
-            sqlquery += "WHERE craft_name LIKE ?";
+            sqlquery += " WHERE craft_name LIKE ?";
         }
         
         // execute query and send result in json format
